@@ -45,7 +45,6 @@ const WeatherMap = ({ zoom, dark }) => {
   );
 
   const [mapTimestamps, setMapTimestamps] = useState(null);
-  const [mapTimestamp, setMapTimestamp] = useState(null);
   const [currentMapTimestampIdx, setCurrentMapTimestampIdx] = useState(0);
 
   const MAP_TIMESTAMP_REFRESH_FREQUENCY = 1000 * 60 * 10; //update every 10 minutes
@@ -61,12 +60,14 @@ const WeatherMap = ({ zoom, dark }) => {
     });
 
     const updateTimeStamps = () => {
+      console.log('Fetching map timestamps...');
       getMapTimestamps()
         .then((res) => {
+          console.log('Got timestamps:', res);
           setMapTimestamps(res);
         })
         .catch((err) => {
-          console.log("err", err);
+          console.log("timestamp fetch error", err);
         });
     };
 
@@ -91,15 +92,16 @@ const WeatherMap = ({ zoom, dark }) => {
 
   const { latitude, longitude } = browserGeo || {};
 
+  // For debugging - log when timestamps are loaded
   useEffect(() => {
-    if (mapTimestamps) {
-      setMapTimestamp(mapTimestamps[currentMapTimestampIdx]);
+    if (mapTimestamps && mapTimestamps.length > 0) {
+      console.log('Timestamps loaded:', mapTimestamps.length, 'items');
     }
-  }, [currentMapTimestampIdx, mapTimestamps]);
+  }, [mapTimestamps]);
 
   // cycle through weather maps when animated is enabled
   useEffect(() => {
-    if (mapTimestamps) {
+    if (mapTimestamps && mapTimestamps.length > 0) {
       if (animateWeatherMap) {
         const interval = setInterval(() => {
           let nextIdx;
@@ -114,6 +116,7 @@ const WeatherMap = ({ zoom, dark }) => {
           clearInterval(interval);
         };
       } else {
+        // Always show the latest radar data
         setCurrentMapTimestampIdx(mapTimestamps.length - 1);
       }
     }
@@ -149,15 +152,16 @@ const WeatherMap = ({ zoom, dark }) => {
         }/tiles/{z}/{x}/{y}?access_token={apiKey}`}
         apiKey={mapApiKey}
       />
-      {mapTimestamp ? (
+      {mapTimestamps && mapTimestamps.length > 0 ? (
         <TileLayer
+          key={animateWeatherMap ? currentMapTimestampIdx : mapTimestamps.length - 1}
           attribution='<a href="https://www.rainviewer.com/">RainViewer</a>'
-          url={`https://tilecache.rainviewer.com/v2/radar/${mapTimestamp}/{size}/{z}/{x}/{y}/{color}/{smooth}_{snow}.png`}
-          opacity={0.3}
-          size={512}
-          color={6} // https://www.rainviewer.com/api.html#colorSchemes
-          smooth={1}
-          snow={1}
+          url={`https://tilecache.rainviewer.com/v2/radar/${
+            animateWeatherMap 
+              ? mapTimestamps[currentMapTimestampIdx] 
+              : mapTimestamps[mapTimestamps.length - 1]
+          }/512/{z}/{x}/{y}/6/1_1.png`}
+          opacity={0.7}
         />
       ) : null}
       {markerIsVisible && markerPosition ? (

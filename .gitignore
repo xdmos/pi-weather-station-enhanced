@@ -1,2 +1,11 @@
 node_modules/
 settings.json
+*.png
+!pi-weather-station.png
+*.jpg
+*.jpeg
+.DS_Store
+.env
+.env.local
+dist/
+client/dist/

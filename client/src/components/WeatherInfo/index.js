@@ -19,7 +19,6 @@ const DAILY_WEATHER_DATA_UPDATE_INTERVAL = 24 * 60 * 60 * 1000; //every day
  * @param {Function} params.stateIntervalSetter state interval setter
  * @param {Function} params.cb callback to invoke on each interval
  * @param {Number} params.intervalTime interval frequency, ms
- * @param {String} params.weatherApiKey weather API key
  * @param {Object} params.mapGeo coordinates to get weather for
  */
 function createWeatherUpdateInterval({
@@ -27,14 +26,13 @@ function createWeatherUpdateInterval({
   stateIntervalSetter,
   cb,
   intervalTime,
-  weatherApiKey,
   mapGeo,
 }) {
   if (stateInterval) {
     clearInterval(stateInterval);
     stateIntervalSetter(null);
   }
-  if (weatherApiKey && mapGeo) {
+  if (mapGeo) {
     const interval = setInterval(cb, intervalTime);
     cb();
     stateIntervalSetter(interval);
@@ -48,18 +46,15 @@ function createWeatherUpdateInterval({
  */
 const WeatherInfo = () => {
   const {
-    getWeatherApiKey,
     getReverseGeoApiKey,
     reverseGeoApiKey,
     updateCurrentWeatherData,
     updateHourlyWeatherData,
     updateDailyWeatherData,
     mapGeo,
-    weatherApiKey,
     currentWeatherDataErr,
     currentWeatherDataErrMsg,
     darkMode,
-    setSettingsMenuOpen,
     currentWeatherData,
     updateSunriseSunset
   } = useContext(AppContext);
@@ -98,19 +93,12 @@ const WeatherInfo = () => {
 
   useEffect(() => {
     setErr(false);
-    if (!weatherApiKey) {
-      getWeatherApiKey().catch((err) => {
-        console.log("error getting weather api key:", err);
-        setErr(true);
-        setSettingsMenuOpen(true);
-      });
-    }
     if (!reverseGeoApiKey) {
       getReverseGeoApiKey().catch((err) => {
         console.log("error getting reverse geo api key:", err);
       });
     }
-  }, [weatherApiKey, reverseGeoApiKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [reverseGeoApiKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     createWeatherUpdateInterval({
@@ -118,7 +106,6 @@ const WeatherInfo = () => {
       stateIntervalSetter: setCurrentWeatherUpdateInterval,
       cb: currentWeatherUpdateCb,
       intervalTime: CURRENT_WEATHER_DATA_UPDATE_INTERVAL,
-      weatherApiKey,
       mapGeo,
     });
     createWeatherUpdateInterval({
@@ -126,7 +113,6 @@ const WeatherInfo = () => {
       stateIntervalSetter: setHourlyWeatherUpdateInterval,
       cb: hourlyWeatherUpdateCb,
       intervalTime: HOURLY_WEATHER_DATA_UPDATE_INTERVAL,
-      weatherApiKey,
       mapGeo,
     });
     createWeatherUpdateInterval({
@@ -134,7 +120,6 @@ const WeatherInfo = () => {
       stateIntervalSetter: setDailyWeatherUpdateInterval,
       cb: dailyWeatherUpdateCb,
       intervalTime: DAILY_WEATHER_DATA_UPDATE_INTERVAL,
-      weatherApiKey,
       mapGeo,
     });
     return () => {
@@ -142,8 +127,10 @@ const WeatherInfo = () => {
       clearInterval(hourlyWeatherUpdateInterval);
       clearInterval(dailyWeatherUpdateInterval);
     };
-  }, [weatherApiKey, mapGeo]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [mapGeo]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  console.log('WeatherInfo render:', { currentWeatherData, currentWeatherDataErr, err, mapGeo });
+  
   if (currentWeatherData) {
     return (
       <div className={styles.container}>
@@ -161,7 +148,7 @@ const WeatherInfo = () => {
         </div>
       </div>
     );
-  } else if (currentWeatherData || currentWeatherDataErr || err) {
+  } else if (currentWeatherDataErr || err) {
     return (
       <div
         className={`${styles.errContainer} ${

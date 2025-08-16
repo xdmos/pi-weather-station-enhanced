@@ -27,7 +27,7 @@ import daySunnyOvercast from "@iconify/icons-wi/day-sunny-overcast";
 
 /**
  * Current weather conditions
- * https://developer.climacell.co/v3/reference#data-layers-weather
+ * Uses Open-Meteo API for weather data
  *
  * @returns {JSX.Element} Current weather conditions component
  */
@@ -35,17 +35,15 @@ const CurrentWeather = () => {
   const { currentWeatherData, tempUnit, speedUnit, sunriseTime, sunsetTime } = useContext(
     AppContext
   );
-  const weatherData =
-    currentWeatherData?.data?.timelines?.[0]?.intervals[0]?.values;
+  const weatherData = currentWeatherData?.current;
   if (weatherData) {
     const {
-      cloudCover,
-      humidity,
-      precipitationType,
-      precipitationProbability,
-      temperature,
-      weatherCode,
-      windSpeed,
+      cloud_cover: cloudCover,
+      relative_humidity_2m: humidity,
+      precipitation: precipitationIntensity,
+      temperature_2m: temperature,
+      weather_code: weatherCode,
+      wind_speed_10m: windSpeed,
     } = weatherData;
     const daylight = sunriseTime && sunsetTime ? isDaylight(new Date(sunriseTime), new Date(sunsetTime)) : true;
     const { icon: weatherIcon, desc: weatherDesc } =
@@ -67,10 +65,10 @@ const CurrentWeather = () => {
             <div className={styles.statItem}>
               <div>
                 <InlineIcon
-                  icon={precipitationType === 2 ? snowIcon : rainIcon}
+                  icon={precipitationIntensity > 0 ? rainIcon : cloudIcon}
                 />
               </div>
-              <div>{precipitationProbability}%</div>
+              <div>{precipitationIntensity?.toFixed(1) || 0} mm</div>
             </div>
             <div className={styles.statItem}>
               <div>
@@ -106,71 +104,64 @@ const CurrentWeather = () => {
 };
 
 /**
- * Parse weather code
+ * Parse WMO weather code used by Open-Meteo
+ * https://open-meteo.com/en/docs
  *
- * https://docs.climacell.co/reference/data-layers-overview
- *
- * @param {String} code
+ * @param {Number} code
  * @param {Boolean} [isDay] if it is currently day
  * @returns {Object} weather description and icon
  */
 const parseWeatherCode = (code, isDay) => {
   switch (code) {
-    case 6201:
-      return { desc: "Heavy freezing rain", icon: isDay ? dayRain : nightRain };
-    case 6001:
-      return { desc: "Freezing rain", icon: isDay ? dayRain : nightRain };
-    case 6200:
-      return { desc: "Light freezing rain", icon: isDay ? dayRain : nightRain };
-    case 6000:
-      return { desc: "Freezing drizzle", icon: rainMix };
-    case 7101:
-      return { desc: "Heavy ice pellets", icon: rainMix };
-    case 7000:
-      return { desc: "Ice pellets", icon: rainMix };
-    case 7102:
-      return { desc: "Light ice pellets", icon: rainMix };
-    case 5101:
-      return { desc: "Heavy snow", icon: snowIcon };
-    case 5000:
-      return { desc: "Show", icon: snowIcon };
-    case 5100:
-      return { desc: "Light snow", icon: snowIcon };
-    case 5001:
-      return { desc: "Flurries", icon: snowIcon };
-    case 8000:
-      return { desc: "Thunder storm", icon: thunderstormIcon };
-    case 4201:
-      return { desc: "Heavy rain", icon: isDay ? dayRain : nightRain };
-    case 4001:
-      return { desc: "Rain", icon: isDay ? dayRain : nightRain };
-    case 4200:
-      return { desc: "Light rain", icon: isDay ? dayRain : nightRain };
-    case 4000:
-      return { desc: "Drizzle", icon: rainMix };
-    case 2100:
-      return { desc: "Light fog", icon: fogIcon };
-    case 2000:
+    case 0:
+      return { desc: "Clear sky", icon: isDay ? daySunny : nightClear };
+    case 1:
+      return { desc: "Mainly clear", icon: isDay ? dayCloudy : nightAltCloudy };
+    case 2:
+      return { desc: "Partly cloudy", icon: isDay ? daySunnyOvercast : nightAltCloudy };
+    case 3:
+      return { desc: "Overcast", icon: cloudyIcon };
+    case 45:
+    case 48:
       return { desc: "Fog", icon: fogIcon };
-    case 1001:
-      return { desc: "Cloudy", icon: cloudyIcon };
-    case 1102:
-      return { desc: "Mostly cloudy", icon: cloudyIcon };
-    case 1101:
-      return {
-        desc: "Partly cloudy",
-        icon: isDay ? daySunnyOvercast : nightAltCloudy,
-      };
-    case 1100:
-      return { desc: "Mostly clear", icon: isDay ? dayCloudy : nightAltCloudy };
-    case 1000:
-      return { desc: "Clear", icon: isDay ? daySunny : nightClear };
-    case 3001:
-      return { desc: "Wind", icon: strongWind };
-    case 3000:
-      return { desc: "Light wind", icon: strongWind };
-    case 3002:
-      return { desc: "Strong wind", icon: strongWind };
+    case 51:
+    case 53:
+    case 55:
+      return { desc: "Drizzle", icon: rainMix };
+    case 56:
+    case 57:
+      return { desc: "Freezing drizzle", icon: rainMix };
+    case 61:
+      return { desc: "Light rain", icon: isDay ? dayRain : nightRain };
+    case 63:
+      return { desc: "Moderate rain", icon: isDay ? dayRain : nightRain };
+    case 65:
+      return { desc: "Heavy rain", icon: isDay ? dayRain : nightRain };
+    case 66:
+    case 67:
+      return { desc: "Freezing rain", icon: isDay ? dayRain : nightRain };
+    case 71:
+      return { desc: "Light snow", icon: snowIcon };
+    case 73:
+      return { desc: "Moderate snow", icon: snowIcon };
+    case 75:
+      return { desc: "Heavy snow", icon: snowIcon };
+    case 77:
+      return { desc: "Snow grains", icon: snowIcon };
+    case 80:
+    case 81:
+    case 82:
+      return { desc: "Rain showers", icon: isDay ? dayRain : nightRain };
+    case 85:
+    case 86:
+      return { desc: "Snow showers", icon: snowIcon };
+    case 95:
+      return { desc: "Thunderstorm", icon: thunderstormIcon };
+    case 96:
+    case 99:
+      return { desc: "Thunderstorm with hail", icon: thunderstormIcon };
+    default:
+      return { desc: "Unknown", icon: isDay ? daySunny : nightClear };
   }
 };
 

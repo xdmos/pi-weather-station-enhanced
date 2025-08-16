@@ -1,23 +1,25 @@
 
-# Pi Weather Station
+# Pi Weather Station Enhanced
 
-This is a weather station designed to be used with a Raspberry Pi on the official 7" 800x480 touchscreen.
+This is an enhanced weather station designed to be used with a Raspberry Pi on the official 7" 800x480 touchscreen.
 
-![pws-screenshot3](https://user-images.githubusercontent.com/15202038/91359998-4625bb80-e7bb-11ea-937e-c87eede41f35.JPG)
+![pi-weather-station](pi-weather-station.png)
 
-The weather station will require you to have API keys from [Mapbox](https://www.mapbox.com/) and [ClimaCell (v4)](https://www.climacell.co/). Optionally, you can use an API key from [LocationIQ](https://locationiq.com/) to preform reverse geocoding.
+The weather station uses the free [Open-Meteo](https://open-meteo.com/) API for weather data (no API key required) and optionally requires API keys from [Mapbox](https://www.mapbox.com/) for map tiles. You can also use an API key from [LocationIQ](https://locationiq.com/) to perform reverse geocoding.
 
 Weather maps are provided by the [RainViewer](https://www.rainviewer.com/) API, which generously does not require an [API key](https://www.rainviewer.com/api.html).
 
 Sunrise and Sunset times are provided by [Sunrise-Sunset](https://sunrise-sunset.org/), which generously does not require an [API key](https://sunrise-sunset.org/api).
 
-See it in action [here](https://www.youtube.com/watch?v=dvM6cyqYSw8).
+> The weather station will periodically make API calls to get weather updates throughout the day. Open-Meteo is free and unlimited, but be mindful of Mapbox usage limits if scrolling around the map frequently.
 
-> Be mindful of the plan limits for your API keys and understand the terms of each provider, as scrolling around the map and selecting different locations will incur API calls for every location. Additionally, the weather station will periodically make additional api calls to get weather updates throughout the day.
+# Enhanced Features
 
-# v2.0.0
-
-1-22-2021: Now uses [ClimaCell](https://www.climacell.co/) API v4. For ClimaCell API v3 keys, use [Pi Weather Station v1](https://github.com/elewin/pi-weather-station/releases/tag/v1.0).
+- **Free Weather API**: Now uses Open-Meteo API (free, no key required) instead of paid services
+- **Automatic Dark Mode**: Switches between light/dark themes based on sunrise/sunset times
+- **5-Day Forecast**: Updated from 7-day due to API limitations
+- **Improved Performance**: Optimized data fetching and reduced API calls
+- **Enhanced UI**: Better responsive design and touch interactions
 
 # Setup
 
@@ -63,7 +65,7 @@ Pi Weather Station is available as a Docker Image for AMD64 and ARM infrastructu
 
 The MIT License (MIT)
 
-Copyright (c) 2020 Eric Lewin
+Copyright (c) 2024 xdmos
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

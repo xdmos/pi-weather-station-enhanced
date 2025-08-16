@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 import { getSettings } from "~/settings";
 import PropTypes from "prop-types";
 import { getCoordsFromApi } from "~/services/geolocation";
@@ -26,6 +26,7 @@ export function AppContextProvider({ children }) {
   const [browserGeo, setBrowserGeo] = useState(null);
   const [mapGeo, setMapGeo] = useState(null);
   const [darkMode, setDarkMode] = useState(true);
+  const [autoDarkMode, setAutoDarkMode] = useState(true); // Auto mode based on sunrise/sunset
   const [currentWeatherData, setCurrentWeatherData] = useState(null);
   const [currentWeatherDataErr, setCurrentWeatherDataErr] = useState(null);
   const [currentWeatherDataErrMsg, setCurrentWeatherDataErrMsg] = useState(
@@ -50,6 +51,67 @@ export function AppContextProvider({ children }) {
   const [mouseHide, setMouseHide] = useState(false);
   const [sunriseTime, setSunriseTime] = useState(null);
   const [sunsetTime, setSunsetTime] = useState(null);
+
+  /**
+   * Check if it's currently daylight
+   * @returns {Boolean} true if daylight, false if night
+   */
+  const isDaylight = useCallback(() => {
+    if (!sunriseTime || !sunsetTime) return true; // Default to light if no data
+    
+    const now = new Date().getTime();
+    const sunrise = new Date(sunriseTime).getTime();
+    const sunset = new Date(sunsetTime).getTime();
+    
+    return now > sunrise && now < sunset;
+  }, [sunriseTime, sunsetTime]);
+
+  /**
+   * Update dark mode automatically based on sunrise/sunset
+   */
+  const updateAutoDarkMode = useCallback(() => {
+    if (autoDarkMode) {
+      const isDay = isDaylight();
+      setDarkMode(!isDay); // Dark mode when it's night
+    }
+  }, [autoDarkMode, isDaylight]);
+
+  /**
+   * Toggle between auto and manual dark mode
+   */
+  function toggleDarkModeType() {
+    if (autoDarkMode) {
+      // Switch to manual mode, keep current state
+      setAutoDarkMode(false);
+    } else {
+      // Switch to auto mode
+      setAutoDarkMode(true);
+      updateAutoDarkMode();
+    }
+  }
+
+  /**
+   * Manual dark mode toggle (only works when auto mode is off)
+   */
+  function toggleDarkMode() {
+    if (!autoDarkMode) {
+      setDarkMode(!darkMode);
+    }
+  }
+
+  // Auto dark mode effect - check every minute and when sunrise/sunset changes
+  useEffect(() => {
+    if (autoDarkMode) {
+      updateAutoDarkMode();
+      
+      // Check every minute if we need to update dark mode
+      const interval = setInterval(() => {
+        updateAutoDarkMode();
+      }, 60000); // 1 minute
+      
+      return () => clearInterval(interval);
+    }
+  }, [sunriseTime, sunsetTime, autoDarkMode, updateAutoDarkMode]);
 
   /**
    * Save mouse hide state
@@ -308,32 +370,17 @@ export function AppContextProvider({ children }) {
     setHourlyWeatherDataErr(null);
     setHourlyWeatherDataErrMsg(null);
     const { latitude, longitude } = coords;
-    const fields = [
-      "temperature",
-      "precipitationProbability",
-      "precipitationIntensity",
-      "windSpeed",
-    ].join("%2c");
-
-    const endTime = new Date(
-      new Date().getTime() + 60 * 60 * 23 * 1000
-    ).toISOString();
 
     return new Promise((resolve, reject) => {
       if (!coords) {
         setHourlyWeatherDataErr(true);
         return reject("No coords");
       }
-      if (!weatherApiKey) {
-        setHourlyWeatherDataErr(true);
-        setSettingsMenuOpen(true);
-        return reject("Missing weather API key");
-      }
 
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation_probability,precipitation,wind_speed_10m&timezone=auto&forecast_days=1`;
+      
       axios
-        .get(
-          `https://data.climacell.co/v4/timelines?location=${latitude}%2C${longitude}&fields=${fields}&timesteps=1h&apikey=${weatherApiKey}&endTime=${endTime}`
-        )
+        .get(url)
         .then((res) => {
           if (!res) {
             return reject({ message: "No response" });
@@ -347,7 +394,6 @@ export function AppContextProvider({ children }) {
           if (err && err.message) {
             setHourlyWeatherDataErrMsg(err.message);
           }
-
           reject(err);
         });
     });
@@ -366,31 +412,17 @@ export function AppContextProvider({ children }) {
     setDailyWeatherDataErr(null);
     setDailyWeatherDataErrMsg(null);
     const { latitude, longitude } = coords;
-    const fields = [
-      "temperature",
-      "precipitationProbability",
-      "precipitationIntensity",
-      "windSpeed",
-    ].join("%2c");
-
-    const endTime = new Date(
-      new Date().getTime() + 4 * 60 * 60 * 24 * 1000
-    ).toISOString();
 
     return new Promise((resolve, reject) => {
       if (!coords) {
         setDailyWeatherDataErr(true);
         return reject("No coords");
       }
-      if (!weatherApiKey) {
-        setDailyWeatherDataErr(true);
-        setSettingsMenuOpen(true);
-        return reject("Missing weather API key");
-      }
+
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,wind_speed_10m_max,weather_code&timezone=auto&forecast_days=5`;
+      
       axios
-        .get(
-          `https://data.climacell.co/v4/timelines?location=${latitude}%2C${longitude}&fields=${fields}&timesteps=1d&apikey=${weatherApiKey}&endTime=${endTime}`
-        )
+        .get(url)
         .then((res) => {
           if (!res) {
             return reject({ message: "No response" });
@@ -456,32 +488,19 @@ export function AppContextProvider({ children }) {
     setCurrentWeatherDataErrMsg(null);
     const { latitude, longitude } = coords;
 
-    const fields = [
-      "temperature",
-      "humidity",
-      "windSpeed",
-      "precipitationIntensity",
-      "precipitationType",
-      "precipitationProbability",
-      "cloudCover",
-      "weatherCode",
-    ].join("%2c");
     return new Promise((resolve, reject) => {
       if (!coords) {
         setCurrentWeatherDataErr(true);
         return reject("No coords");
       }
-      if (!weatherApiKey) {
-        setCurrentWeatherDataErr(true);
-        setSettingsMenuOpen(true);
-        return reject("Missing weather API key");
-      }
 
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code,cloud_cover&timezone=auto`;
+      console.log('Open-Meteo API request:', url);
+      
       axios
-        .get(
-          `https://data.climacell.co/v4/timelines?location=${latitude}%2C${longitude}&fields=${fields}&timesteps=current&apikey=${weatherApiKey}`
-        )
+        .get(url)
         .then((res) => {
+          console.log('Open-Meteo API response:', res.data);
           if (!res) {
             return reject({ message: "No response" });
           }
@@ -490,6 +509,7 @@ export function AppContextProvider({ children }) {
           resolve(data);
         })
         .catch((err) => {
+          console.log('Open-Meteo API error:', err);
           setCurrentWeatherDataErr(true);
           if (err && err.message) {
             setCurrentWeatherDataErrMsg(err.message);
@@ -566,6 +586,10 @@ export function AppContextProvider({ children }) {
     getBrowserGeo,
     darkMode,
     setDarkMode,
+    autoDarkMode,
+    setAutoDarkMode,
+    toggleDarkMode,
+    toggleDarkModeType,
     mapGeo,
     setMapGeo,
     setMapPosition,

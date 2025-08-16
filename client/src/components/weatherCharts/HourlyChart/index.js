@@ -97,32 +97,36 @@ const mapChartData = ({
   altMode,
   lengthUnit,
 }) => {
-  const data = weatherData?.data?.timelines?.[0]?.intervals;
-  if (!data) {
+  const hourlyData = weatherData?.hourly;
+  if (!hourlyData || !hourlyData.time) {
     return null;
   }
+  
+  // Take first 24 hours only
+  const hoursToShow = 24;
+  const times = hourlyData.time.slice(0, hoursToShow);
+  const temperatures = hourlyData.temperature_2m?.slice(0, hoursToShow) || [];
+  const windSpeeds = hourlyData.wind_speed_10m?.slice(0, hoursToShow) || [];
+  const precipitationProb = hourlyData.precipitation_probability?.slice(0, hoursToShow) || [];
+  const precipitation = hourlyData.precipitation?.slice(0, hoursToShow) || [];
+  
   return {
-    labels: data.map((e) => {
+    labels: times.map((time) => {
+      const date = new Date(time);
       if (clockTime === "12") {
-        return `${format(new Date(e.startTime), "h")}${format(
-          new Date(e.startTime),
-          "aaaaa"
-        )}`;
+        return `${format(date, "h")}${format(date, "aaaaa")}`;
       } else {
-        return `${format(new Date(e.startTime), "HH")}`;
+        return `${format(date, "HH")}`;
       }
     }),
     datasets: [
       {
         radius: 0,
         label: altMode ? "Wind Speed" : "Temp",
-        data: data.map((e) => {
-          const {
-            values: { windSpeed, temperature },
-          } = e;
+        data: times.map((_, index) => {
           return altMode
-            ? convertSpeed(windSpeed, speedUnit)
-            : convertTemp(temperature, tempUnit);
+            ? convertSpeed(windSpeeds[index] || 0, speedUnit)
+            : convertTemp(temperatures[index] || 0, tempUnit);
         }),
         yAxisID: "y-axis-1",
         borderColor: chartColors.gray,
@@ -132,13 +136,10 @@ const mapChartData = ({
       {
         radius: 0,
         label: "Precipitation",
-        data: data.map((e) => {
-          const {
-            values: { precipitationIntensity, precipitationProbability },
-          } = e;
+        data: times.map((_, index) => {
           return altMode
-            ? convertLength(precipitationIntensity, lengthUnit)
-            : precipitationProbability;
+            ? convertLength(precipitation[index] || 0, lengthUnit)
+            : (precipitationProb[index] || 0);
         }),
         yAxisID: "y-axis-2",
         borderColor: chartColors.blue,

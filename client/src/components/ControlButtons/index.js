@@ -18,7 +18,9 @@ import stopFilledAlt from "@iconify/icons-carbon/stop-filled-alt";
 const ControlButtons = () => {
   const {
     darkMode,
-    setDarkMode,
+    autoDarkMode,
+    toggleDarkMode,
+    toggleDarkModeType,
     resetMapPosition,
     markerIsVisible,
     toggleMarker,
@@ -49,8 +51,31 @@ const ControlButtons = () => {
       >
         <InlineIcon icon={animateWeatherMap ? stopFilledAlt : playFilledAlt} />
       </div>
-      <div onClick={() => setDarkMode(!darkMode)}>
+      <div 
+        onClick={toggleDarkMode}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          toggleDarkModeType();
+        }}
+        style={{ 
+          position: 'relative',
+          opacity: autoDarkMode && !darkMode ? 0.7 : 1 
+        }}
+        title={autoDarkMode ? "Auto mode (right-click for manual)" : "Manual mode (right-click for auto)"}
+      >
         <InlineIcon icon={contrastIcon} />
+        {autoDarkMode && (
+          <div style={{
+            position: 'absolute',
+            top: -2,
+            right: -2,
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            backgroundColor: '#4a90e2',
+            border: '1px solid white'
+          }} />
+        )}
       </div>
       <div
         onClick={toggleSettingsMenuOpen}

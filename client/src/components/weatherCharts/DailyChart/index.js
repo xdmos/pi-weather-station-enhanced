@@ -96,28 +96,36 @@ const mapChartData = ({
   altMode,
   lengthUnit,
 }) => {
-  const data = weatherData?.data?.timelines?.[0]?.intervals;
-  if (!data) {
+  const dailyData = weatherData?.daily;
+  if (!dailyData || !dailyData.time) {
     return null;
   }
+  
+  const times = dailyData.time || [];
+  const tempMax = dailyData.temperature_2m_max || [];
+  const tempMin = dailyData.temperature_2m_min || [];
+  const windSpeeds = dailyData.wind_speed_10m_max || [];
+  const precipitationProb = dailyData.precipitation_probability_max || [];
+  const precipitation = dailyData.precipitation_sum || [];
+  
+  // Calculate average temperature for each day
+  const avgTemperatures = times.map((_, index) => {
+    return (tempMax[index] + tempMin[index]) / 2;
+  });
+  
   return {
-    labels: data.map((e) => {
-      const date = new Date(e.startTime);
-      const adjustedTimestamp =
-        date.getTime() + date.getTimezoneOffset() * 60 * 1000;
-      return format(new Date(adjustedTimestamp), "EEEEE");
+    labels: times.map((time) => {
+      const date = new Date(time);
+      return format(date, "EEEEE"); // Short day name (Mon, Tue, etc.)
     }),
     datasets: [
       {
         radius: 0,
         label: altMode ? "Wind Speed" : "Temp",
-        data: data.map((e) => {
-          const {
-            values: { windSpeed, temperature },
-          } = e;
+        data: times.map((_, index) => {
           return altMode
-            ? convertSpeed(windSpeed, speedUnit)
-            : convertTemp(temperature, tempUnit);
+            ? convertSpeed(windSpeeds[index] || 0, speedUnit)
+            : convertTemp(avgTemperatures[index] || 0, tempUnit);
         }),
         yAxisID: "y-axis-1",
         borderColor: chartColors.gray,
@@ -127,13 +135,10 @@ const mapChartData = ({
       {
         radius: 0,
         label: "Precipitation",
-        data: data.map((e) => {
-          const {
-            values: { precipitationIntensity, precipitationProbability },
-          } = e;
+        data: times.map((_, index) => {
           return altMode
-            ? convertLength(precipitationIntensity, lengthUnit)
-            : precipitationProbability;
+            ? convertLength(precipitation[index] || 0, lengthUnit)
+            : (precipitationProb[index] || 0);
         }),
         yAxisID: "y-axis-2",
         borderColor: chartColors.blue,
