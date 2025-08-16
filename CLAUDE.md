@@ -70,3 +70,64 @@ Automatic dark/light mode switches based on sunrise/sunset times with manual ove
 
 ### Map Integration
 Weather radar integration uses RainViewer's tile API with timestamp-based URLs. Radar animation cycles through available timestamps when enabled. Map click events update location and trigger weather data refresh.
+
+## Autostart Configuration
+
+The project includes systemd services for automatic startup on Raspberry Pi boot.
+
+### Service Files
+- **`pi-weather-station.service`**: Starts the Node.js backend server on port 8080
+- **`pi-weather-kiosk.service`**: Launches Chromium in fullscreen kiosk mode pointing to localhost:8080
+- **`start-weather-station.sh`**: Manual startup script with network checks
+
+### Installation Commands
+```bash
+# Copy service files to systemd
+sudo cp pi-weather-station.service /etc/systemd/system/
+sudo cp pi-weather-kiosk.service /etc/systemd/system/
+
+# Reload systemd and enable services
+sudo systemctl daemon-reload
+sudo systemctl enable pi-weather-station.service
+sudo systemctl enable pi-weather-kiosk.service
+
+# Start services immediately (optional)
+sudo systemctl start pi-weather-station.service
+sudo systemctl start pi-weather-kiosk.service
+```
+
+### Service Management
+```bash
+# Check service status
+sudo systemctl status pi-weather-station.service
+sudo systemctl status pi-weather-kiosk.service
+
+# View service logs
+sudo journalctl -u pi-weather-station.service -f
+sudo journalctl -u pi-weather-kiosk.service -f
+
+# Restart services
+sudo systemctl restart pi-weather-station.service
+sudo systemctl restart pi-weather-kiosk.service
+
+# Disable autostart
+sudo systemctl disable pi-weather-station.service
+sudo systemctl disable pi-weather-kiosk.service
+```
+
+### Autostart Behavior
+On system boot, the Pi Weather Station will:
+1. Start the backend server automatically
+2. Wait for network connectivity
+3. Launch Chromium in fullscreen kiosk mode
+4. Display the weather station interface
+5. Restart automatically if services crash
+
+### Chromium Kiosk Options
+The kiosk service uses these Chromium flags:
+- `--start-fullscreen`: Starts in fullscreen mode
+- `--kiosk`: Enables kiosk mode (no address bar, etc.)
+- `--no-sandbox`: Required for systemd service execution
+- `--disable-infobars`: Removes info bars
+- `--disable-restore-session-state`: Prevents session restore dialogs
+- `--disable-session-crashed-bubble`: Prevents crash recovery dialogs
