@@ -1,0 +1,30 @@
+.countdown {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #f6f6f4;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: "Rubik", sans-serif;
+  font-size: 12px;
+  backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 1000;
+  min-width: 120px;
+}
+
+.label {
+  font-size: 10px;
+  color: #c7c7c7;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.time {
+  font-size: 14px;
+  font-weight: bold;
+  color: #f6f6f4;
+  font-family: monospace;
+}

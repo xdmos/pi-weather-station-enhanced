@@ -18,6 +18,7 @@ Pi Weather Station is a React-based weather application designed for Raspberry P
 - **WeatherInfo**: Main weather display container that orchestrates CurrentWeather and chart components
 - **WeatherCharts**: Chart.js-based hourly (24h) and daily (5-day) forecast visualizations
 - **Screensaver**: Pixel burn-in prevention component with three display modes (images, videos, animations)
+- **ScreensaverCountdown**: Timer component showing countdown to screensaver activation
 
 ### API Integration
 - **Weather Data**: Open-Meteo API (free, no key required) for current/hourly/daily weather
@@ -25,10 +26,10 @@ Pi Weather Station is a React-based weather application designed for Raspberry P
 - **Maps**: Mapbox API (requires key) for base map tiles
 - **Reverse Geocoding**: LocationIQ API (optional) for location names
 - **Sunrise/Sunset**: Sunrise-Sunset.org API (free, no key required)
-- **Screensaver Images**: Unsplash Source API (free, no key required) for landscape images
+- **Screensaver Images**: Lorem Picsum API (free, no key required) for high-quality random images
 
 ### State Management Pattern
-All application state flows through AppContext with specific update functions for each data type. Weather data updates automatically on intervals (current: 10min, hourly: 1hr, daily: 24hr).
+All application state flows through AppContext with specific update functions for each data type. Weather data updates automatically on intervals (current: 3min, hourly: 1hr, daily: 24hr). Screensaver state includes activity tracking, timeout management, and countdown timers.
 
 ## Common Commands
 
@@ -81,7 +82,7 @@ Weather radar integration uses RainViewer's tile API with timestamp-based URLs. 
 Prevents OLED/LCD pixel burn-in on displays by activating after a period of inactivity.
 
 ### Display Modes
-1. **Landscape Images**: Rotating high-quality nature photos from Unsplash with Ken Burns effect
+1. **Landscape Images**: Rotating high-quality random photos from Lorem Picsum with Ken Burns effect
 2. **Nature Videos**: Looping scenic videos (streamed from internet)
 3. **Abstract Animation**: CSS-based wave animations with gradient background (works offline)
 
@@ -100,9 +101,19 @@ Located in Settings menu under "SCREENSAVER" section:
 
 ### Implementation Details
 - Images rotate every 20 seconds with smooth transitions
+- Ken Burns effect provides gentle zoom and movement on images
+- Automatic error handling - skips to next image if loading fails
+- Loading indicators during image transitions
 - All settings persist in localStorage
-- No additional API keys required (uses free Unsplash source)
+- No additional API keys required (uses free Lorem Picsum API)
 - Requires internet connection for images/videos, animations work offline
+
+### Timer Components
+- **Main Application Timer**: Bottom-left corner shows countdown to screensaver activation
+- **Screensaver Timer**: Bottom-left corner shows remaining screensaver duration
+- **Clock Display**: Top-right corner shows current time during screensaver
+- Updates every second for accurate time tracking
+- Automatically hides when screensaver is disabled or not applicable
 
 ## Display Optimizations
 

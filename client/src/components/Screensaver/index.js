@@ -3,16 +3,16 @@ import styles from "./styles.css";
 import { AppContext } from "~/AppContext";
 
 const LANDSCAPE_IMAGES = [
-  "https://source.unsplash.com/1920x1080/?landscape,nature",
-  "https://source.unsplash.com/1920x1080/?mountains,sunset",
-  "https://source.unsplash.com/1920x1080/?ocean,waves",
-  "https://source.unsplash.com/1920x1080/?forest,trees",
-  "https://source.unsplash.com/1920x1080/?aurora,northern-lights",
-  "https://source.unsplash.com/1920x1080/?waterfall,nature",
-  "https://source.unsplash.com/1920x1080/?beach,tropical",
-  "https://source.unsplash.com/1920x1080/?desert,dunes",
-  "https://source.unsplash.com/1920x1080/?lake,reflection",
-  "https://source.unsplash.com/1920x1080/?clouds,sky"
+  "https://picsum.photos/1920/1080?random=1",
+  "https://picsum.photos/1920/1080?random=2", 
+  "https://picsum.photos/1920/1080?random=3",
+  "https://picsum.photos/1920/1080?random=4",
+  "https://picsum.photos/1920/1080?random=5",
+  "https://picsum.photos/1920/1080?random=6",
+  "https://picsum.photos/1920/1080?random=7",
+  "https://picsum.photos/1920/1080?random=8",
+  "https://picsum.photos/1920/1080?random=9",
+  "https://picsum.photos/1920/1080?random=10"
 ];
 
 const VIDEO_URLS = [
@@ -26,17 +26,37 @@ const VIDEO_URLS = [
  * @returns {JSX.Element} Screensaver component
  */
 const Screensaver = () => {
-  const { screensaverType, deactivateScreensaver } = useContext(AppContext);
+  const { screensaverType, deactivateScreensaver, screensaverDuration } = useContext(AppContext);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentVideoIndex] = useState(0);
   const [imageUrl, setImageUrl] = useState("");
+  const [timeRemaining, setTimeRemaining] = useState(screensaverDuration * 60);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const loadNewImage = () => {
+    setImageLoaded(false);
     const baseUrl = LANDSCAPE_IMAGES[currentImageIndex];
     const timestamp = new Date().getTime();
     setImageUrl(`${baseUrl}&t=${timestamp}`);
   };
 
+  // Countdown timer effect
+  useEffect(() => {
+    setTimeRemaining(screensaverDuration * 60);
+    const timer = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 1) {
+          deactivateScreensaver();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [screensaverDuration, deactivateScreensaver]);
+
+  // Image rotation effect
   useEffect(() => {
     if (screensaverType === "images") {
       loadNewImage();
@@ -48,6 +68,7 @@ const Screensaver = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screensaverType]);
 
+  // Load new image when index changes
   useEffect(() => {
     if (screensaverType === "images") {
       loadNewImage();
@@ -59,6 +80,12 @@ const Screensaver = () => {
     e.preventDefault();
     e.stopPropagation();
     deactivateScreensaver();
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
   const renderContent = () => {
@@ -75,10 +102,27 @@ const Screensaver = () => {
       );
     } else if (screensaverType === "images") {
       return (
-        <div 
-          className={styles.imageContainer}
-          style={{ backgroundImage: `url(${imageUrl})` }}
-        />
+        <>
+          <div 
+            className={`${styles.imageContainer} ${imageLoaded ? styles.loaded : ''}`}
+            style={{ backgroundImage: `url(${imageUrl})` }}
+          />
+          <img
+            src={imageUrl}
+            alt="Loading..."
+            className={styles.hiddenImg}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => {
+              console.log("Image failed to load, trying next...");
+              setCurrentImageIndex((prev) => (prev + 1) % LANDSCAPE_IMAGES.length);
+            }}
+          />
+          {!imageLoaded && (
+            <div className={styles.loadingIndicator}>
+              Loading image...
+            </div>
+          )}
+        </>
       );
     } else {
       return (
@@ -104,6 +148,10 @@ const Screensaver = () => {
           hour: '2-digit', 
           minute: '2-digit' 
         })}
+      </div>
+      <div className={styles.countdown}>
+        <div className={styles.countdownLabel}>Screensaver ends in:</div>
+        <div className={styles.countdownTime}>{formatTime(timeRemaining)}</div>
       </div>
     </div>
   );

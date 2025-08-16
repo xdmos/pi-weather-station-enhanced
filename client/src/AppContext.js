@@ -672,6 +672,18 @@ export function AppContextProvider({ children }) {
   }
 
   /**
+   * Get time remaining until screensaver activation (in seconds)
+   */
+  function getTimeUntilScreensaver() {
+    if (!screensaverEnabled || screensaverActive) return 0;
+    const now = Date.now();
+    const timeSinceActivity = now - lastActivityTime;
+    const timeoutMs = screensaverTimeout * 60 * 1000;
+    const timeRemaining = Math.max(0, timeoutMs - timeSinceActivity);
+    return Math.floor(timeRemaining / 1000);
+  }
+
+  /**
    * Saves settings to `settings.json`
    *
    * @param {Object} settings
@@ -777,6 +789,7 @@ export function AppContextProvider({ children }) {
     activateScreensaver,
     deactivateScreensaver,
     recordActivity,
+    getTimeUntilScreensaver,
   };
 
   return (
