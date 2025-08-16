@@ -18,7 +18,6 @@ import "!style-loader!css-loader!./animations.css";
 const Settings = () => {
   const {
     settingsMenuOpen,
-    weatherApiKey,
     mapApiKey,
     reverseGeoApiKey,
     customLat,
@@ -29,26 +28,22 @@ const Settings = () => {
   } = useContext(AppContext);
 
   const [mapsKey, setMapsKey] = useState(null);
-  const [weatherKey, setWeatherKey] = useState(null);
   const [geoKey, setGeoKey] = useState(null);
   const [lat, setLat] = useState(null);
   const [lon, setLon] = useState(null);
 
   const [currentMapsKey, setCurrentMapsKey] = useState(null);
-  const [currentWeatherKey, setCurrentWeatherKey] = useState(null);
   const [currentGeoKey, setCurrentGeoKey] = useState(null);
   const [currentLat, setCurrentLat] = useState(null);
   const [currentLon, setCurrentLon] = useState(null);
 
   useEffect(() => {
     setCurrentMapsKey(mapApiKey);
-    setCurrentWeatherKey(weatherApiKey);
     setCurrentGeoKey(reverseGeoApiKey);
     setCurrentLat(customLat);
     setCurrentLon(customLon);
   }, [
     mapApiKey,
-    weatherApiKey,
     reverseGeoApiKey,
     customLat,
     customLon,
@@ -61,9 +56,6 @@ const Settings = () => {
     if (mapApiKey) {
       setMapsKey(mapApiKey);
     }
-    if (weatherApiKey) {
-      setWeatherKey(weatherApiKey);
-    }
     if (reverseGeoApiKey) {
       setGeoKey(reverseGeoApiKey);
     }
@@ -73,7 +65,7 @@ const Settings = () => {
     if (customLon) {
       setLon(customLon);
     }
-  }, [mapApiKey, weatherApiKey, reverseGeoApiKey, customLon, customLat]);
+  }, [mapApiKey, reverseGeoApiKey, customLon, customLat]);
 
   return (
     <CSSTransition
@@ -94,38 +86,7 @@ const Settings = () => {
         </div>
         <div className={styles.settingsContainer}>
           <ToggleButtons />
-          <Input
-            label={"MAPS API KEY"}
-            val={mapsKey}
-            current={currentMapsKey}
-            cb={setMapsKey}
-            required={true}
-          />
-          <Input
-            label={"WEATHER API KEY"}
-            val={weatherKey}
-            current={currentWeatherKey}
-            cb={setWeatherKey}
-            required={true}
-          />
-          <Input
-            label={"GEOLOCATION API KEY"}
-            val={geoKey}
-            current={currentGeoKey}
-            cb={setGeoKey}
-          />
-          <Input
-            label={"CUSTOM STARTING LATITUDE"}
-            val={lat}
-            cb={setLat}
-            current={currentLat}
-          />
-          <Input
-            label={"CUSTOM STARTING LONGITUDE"}
-            val={lon}
-            cb={setLon}
-            current={currentLon}
-          />
+          <ScreensaverSettings />
           <div className={styles.bottomButtonContainer}>
             <div>
               <div className={styles.label}>HIDE MOUSE</div>
@@ -141,12 +102,38 @@ const Settings = () => {
             <div className={styles.saveButtonContainer}>
               <SaveButton
                 mapsKey={mapsKey}
-                weatherKey={weatherKey}
                 geoKey={geoKey}
                 lat={lat}
                 lon={lon}
               />
             </div>
+          </div>
+          <div className={styles.apiKeysSection}>
+            <Input
+              label={"CUSTOM STARTING LATITUDE"}
+              val={lat}
+              cb={setLat}
+              current={currentLat}
+            />
+            <Input
+              label={"CUSTOM STARTING LONGITUDE"}
+              val={lon}
+              cb={setLon}
+              current={currentLon}
+            />
+            <Input
+              label={"MAPS API KEY"}
+              val={mapsKey}
+              current={currentMapsKey}
+              cb={setMapsKey}
+              required={true}
+            />
+            <Input
+              label={"GEOLOCATION API KEY (OPTIONAL)"}
+              val={geoKey}
+              current={currentGeoKey}
+              cb={setGeoKey}
+            />
           </div>
         </div>
       </div>
@@ -161,13 +148,12 @@ export default Settings;
  *
  * @param {Object} props
  * @param {String} [props.mapsKey]
- * @param {String} [props.weatherKey]
  * @param {String} [props.geoKey]
  * @param {String} [props.lat]
  * @param {String} [props.lon]
  * @returns {JSX.Element} Save button
  */
-const SaveButton = ({ mapsKey, weatherKey, geoKey, lat, lon }) => {
+const SaveButton = ({ mapsKey, geoKey, lat, lon }) => {
   const { saveSettingsToJson, setSettingsMenuOpen, mouseHide } = useContext(
     AppContext
   );
@@ -177,7 +163,7 @@ const SaveButton = ({ mapsKey, weatherKey, geoKey, lat, lon }) => {
         !mouseHide ? styles.showMouse : ""
       }`}
       onClick={() => {
-        saveSettingsToJson({ mapsKey, weatherKey, geoKey, lat, lon })
+        saveSettingsToJson({ mapsKey, weatherKey: null, geoKey, lat, lon })
           .then(() => {
             setSettingsMenuOpen(false);
           })
@@ -196,7 +182,6 @@ const SaveButton = ({ mapsKey, weatherKey, geoKey, lat, lon }) => {
 
 SaveButton.propTypes = {
   mapsKey: PropTypes.string,
-  weatherKey: PropTypes.string,
   geoKey: PropTypes.string,
   lat: PropTypes.string,
   lon: PropTypes.string,
@@ -422,4 +407,83 @@ Input.propTypes = {
   cb: PropTypes.func.isRequired,
   required: PropTypes.bool,
   current: PropTypes.string,
+};
+
+/**
+ * Screensaver Settings
+ *
+ * @returns {JSX.Element} Screensaver settings component
+ */
+const ScreensaverSettings = () => {
+  const {
+    screensaverEnabled,
+    screensaverTimeout,
+    screensaverDuration,
+    screensaverType,
+    saveScreensaverEnabled,
+    saveScreensaverTimeout,
+    saveScreensaverDuration,
+    saveScreensaverType,
+  } = useContext(AppContext);
+
+  return (
+    <div className={styles.screensaverSection}>
+      <div className={styles.label}>SCREENSAVER</div>
+      <div className={styles.screensaverOptions}>
+        <div>
+          <div className={styles.sublabel}>Enabled</div>
+          <ToggleButton
+            button1Label={"ON"}
+            button2Label={"OFF"}
+            val={screensaverEnabled}
+            button1Val={true}
+            button2Val={false}
+            cb={saveScreensaverEnabled}
+          />
+        </div>
+        {screensaverEnabled && (
+          <>
+            <div>
+              <div className={styles.sublabel}>Type</div>
+              <select
+                value={screensaverType}
+                onChange={(e) => saveScreensaverType(e.target.value)}
+                className={styles.select}
+              >
+                <option value="images">Landscape Images</option>
+                <option value="video">Nature Videos</option>
+                <option value="animation">Abstract Animation</option>
+              </select>
+            </div>
+            <div>
+              <div className={styles.sublabel}>Timeout</div>
+              <select
+                value={screensaverTimeout}
+                onChange={(e) => saveScreensaverTimeout(parseInt(e.target.value))}
+                className={styles.select}
+              >
+                <option value="30">30 minutes</option>
+                <option value="60">1 hour</option>
+                <option value="120">2 hours</option>
+                <option value="180">3 hours</option>
+              </select>
+            </div>
+            <div>
+              <div className={styles.sublabel}>Duration</div>
+              <select
+                value={screensaverDuration}
+                onChange={(e) => saveScreensaverDuration(parseInt(e.target.value))}
+                className={styles.select}
+              >
+                <option value="1">1 minute</option>
+                <option value="3">3 minutes</option>
+                <option value="5">5 minutes</option>
+                <option value="10">10 minutes</option>
+              </select>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
 };

@@ -13,10 +13,11 @@ Pi Weather Station is a React-based weather application designed for Raspberry P
 - **Client**: React SPA in `/client/src/` with Webpack build system
 
 ### Core Components Architecture
-- **AppContext**: Central state management using React Context - manages all weather data, settings, geolocation, dark mode, and API keys
+- **AppContext**: Central state management using React Context - manages all weather data, settings, geolocation, dark mode, screensaver state, and API keys
 - **WeatherMap**: Leaflet-based interactive map with RainViewer radar overlay and Mapbox base tiles
 - **WeatherInfo**: Main weather display container that orchestrates CurrentWeather and chart components
 - **WeatherCharts**: Chart.js-based hourly (24h) and daily (5-day) forecast visualizations
+- **Screensaver**: Pixel burn-in prevention component with three display modes (images, videos, animations)
 
 ### API Integration
 - **Weather Data**: Open-Meteo API (free, no key required) for current/hourly/daily weather
@@ -24,6 +25,7 @@ Pi Weather Station is a React-based weather application designed for Raspberry P
 - **Maps**: Mapbox API (requires key) for base map tiles
 - **Reverse Geocoding**: LocationIQ API (optional) for location names
 - **Sunrise/Sunset**: Sunrise-Sunset.org API (free, no key required)
+- **Screensaver Images**: Unsplash Source API (free, no key required) for landscape images
 
 ### State Management Pattern
 All application state flows through AppContext with specific update functions for each data type. Weather data updates automatically on intervals (current: 10min, hourly: 1hr, daily: 24hr).
@@ -53,9 +55,11 @@ The codebase was recently migrated from Tomorrow.io (paid, limited) to Open-Mete
 
 ### Settings and Configuration
 Settings are stored in `/settings.json` with API keys. Required keys:
-- `mapApiKey`: Mapbox token for base map tiles
-- `reverseGeoApiKey`: LocationIQ token (optional)
+- `mapApiKey`: Mapbox token for base map tiles (required)
+- `reverseGeoApiKey`: LocationIQ token (optional, for location names)
 - `startingLat/startingLon`: Default location coordinates
+
+Note: Weather API key is no longer needed as Open-Meteo is free and doesn't require authentication.
 
 ### Dark Mode Implementation
 Automatic dark/light mode switches based on sunrise/sunset times with manual override:
@@ -70,6 +74,57 @@ Automatic dark/light mode switches based on sunrise/sunset times with manual ove
 
 ### Map Integration
 Weather radar integration uses RainViewer's tile API with timestamp-based URLs. Radar animation cycles through available timestamps when enabled. Map click events update location and trigger weather data refresh.
+
+## Screensaver Feature
+
+### Purpose
+Prevents OLED/LCD pixel burn-in on displays by activating after a period of inactivity.
+
+### Display Modes
+1. **Landscape Images**: Rotating high-quality nature photos from Unsplash with Ken Burns effect
+2. **Nature Videos**: Looping scenic videos (streamed from internet)
+3. **Abstract Animation**: CSS-based wave animations with gradient background (works offline)
+
+### Configuration
+Located in Settings menu under "SCREENSAVER" section:
+- **Enable/Disable**: Toggle screensaver on/off
+- **Timeout Options**: 30 minutes, 1 hour, 2 hours, 3 hours
+- **Duration Options**: 1, 3, 5, or 10 minutes
+- **Content Type**: Choose between images, videos, or animations
+
+### Activity Detection
+- Monitors: mouse movement, clicks, touches, keyboard input, and scroll events
+- Automatically deactivates on any user interaction
+- Returns to weather display immediately when interrupted
+- Clock display shown in corner during screensaver
+
+### Implementation Details
+- Images rotate every 20 seconds with smooth transitions
+- All settings persist in localStorage
+- No additional API keys required (uses free Unsplash source)
+- Requires internet connection for images/videos, animations work offline
+
+## Display Optimizations
+
+### 5-inch Display Support
+The interface has been optimized for small touchscreens (5-7 inch):
+
+#### Settings Layout
+- **Compact Design**: All unit toggles (F/C, mph/m/s, in/mm, 12h/24h) in single row
+- **Reorganized Sections**: 
+  1. Units (top, single row)
+  2. Screensaver options
+  3. Hide Mouse + Save button
+  4. API Keys (bottom, scrollable)
+- **Scrollable Interface**: Vertical scrolling with styled scrollbar for overflow content
+- **Responsive Elements**: Buttons and inputs sized for touch interaction
+
+#### Style Adjustments for Small Screens
+- Reduced font sizes (10-11px for labels, 9-10px for sublabels)
+- Smaller buttons (26x26px base, 45px width for unit toggles)
+- Compact margins and padding throughout
+- Dark dropdown options for better contrast
+- Media queries for screens under 480px height and 800px width
 
 ## Autostart Configuration
 

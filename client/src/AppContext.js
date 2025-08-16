@@ -11,6 +11,10 @@ const SPEED_UNIT_STORAGE_KEY = "speedUnit";
 const LENGTH_UNIT_STORAGE_KEY = "lengthUnit";
 const CLOCK_UNIT_STORAGE_KEY = "clockTime";
 const MOUSE_HIDE_STORAGE_KEY = "mouseHide";
+const SCREENSAVER_ENABLED_KEY = "screensaverEnabled";
+const SCREENSAVER_TIMEOUT_KEY = "screensaverTimeout";
+const SCREENSAVER_DURATION_KEY = "screensaverDuration";
+const SCREENSAVER_TYPE_KEY = "screensaverType";
 
 /**
  * App context provider
@@ -51,6 +55,12 @@ export function AppContextProvider({ children }) {
   const [mouseHide, setMouseHide] = useState(false);
   const [sunriseTime, setSunriseTime] = useState(null);
   const [sunsetTime, setSunsetTime] = useState(null);
+  const [screensaverActive, setScreensaverActive] = useState(false);
+  const [screensaverEnabled, setScreensaverEnabled] = useState(true);
+  const [screensaverTimeout, setScreensaverTimeout] = useState(60); // minutes
+  const [screensaverDuration, setScreensaverDuration] = useState(3); // minutes
+  const [screensaverType, setScreensaverType] = useState("images"); // images, video, animation
+  const [lastActivityTime, setLastActivityTime] = useState(Date.now());
 
   /**
    * Check if it's currently daylight
@@ -112,6 +122,51 @@ export function AppContextProvider({ children }) {
       return () => clearInterval(interval);
     }
   }, [sunriseTime, sunsetTime, autoDarkMode, updateAutoDarkMode]);
+
+  // Screensaver timeout check
+  useEffect(() => {
+    if (!screensaverEnabled || screensaverActive) return;
+
+    const checkInactivity = () => {
+      const now = Date.now();
+      const timeSinceLastActivity = now - lastActivityTime;
+      const timeoutMs = screensaverTimeout * 60 * 1000;
+
+      if (timeSinceLastActivity >= timeoutMs) {
+        activateScreensaver();
+      }
+    };
+
+    // Check every minute
+    const interval = setInterval(checkInactivity, 60000);
+    
+    // Also check immediately in case we're already past the timeout
+    checkInactivity();
+
+    return () => clearInterval(interval);
+  }, [screensaverEnabled, screensaverActive, lastActivityTime, screensaverTimeout]);
+
+  // Activity detection
+  useEffect(() => {
+    const handleActivity = () => {
+      recordActivity();
+    };
+
+    // Add event listeners for various activity types
+    window.addEventListener('mousemove', handleActivity);
+    window.addEventListener('mousedown', handleActivity);
+    window.addEventListener('keydown', handleActivity);
+    window.addEventListener('touchstart', handleActivity);
+    window.addEventListener('wheel', handleActivity);
+
+    return () => {
+      window.removeEventListener('mousemove', handleActivity);
+      window.removeEventListener('mousedown', handleActivity);
+      window.removeEventListener('keydown', handleActivity);
+      window.removeEventListener('touchstart', handleActivity);
+      window.removeEventListener('wheel', handleActivity);
+    };
+  }, []);
 
   /**
    * Save mouse hide state
@@ -175,6 +230,10 @@ export function AppContextProvider({ children }) {
     const speed = window.localStorage.getItem(SPEED_UNIT_STORAGE_KEY);
     const length = window.localStorage.getItem(LENGTH_UNIT_STORAGE_KEY);
     const clock = window.localStorage.getItem(CLOCK_UNIT_STORAGE_KEY);
+    const screensaverEnabledVal = window.localStorage.getItem(SCREENSAVER_ENABLED_KEY);
+    const screensaverTimeoutVal = window.localStorage.getItem(SCREENSAVER_TIMEOUT_KEY);
+    const screensaverDurationVal = window.localStorage.getItem(SCREENSAVER_DURATION_KEY);
+    const screensaverTypeVal = window.localStorage.getItem(SCREENSAVER_TYPE_KEY);
 
     let mouseHide;
     try {
@@ -197,6 +256,18 @@ export function AppContextProvider({ children }) {
     }
     if (clock) {
       setClockTime(clock);
+    }
+    if (screensaverEnabledVal !== null) {
+      setScreensaverEnabled(screensaverEnabledVal === 'true');
+    }
+    if (screensaverTimeoutVal) {
+      setScreensaverTimeout(parseInt(screensaverTimeoutVal));
+    }
+    if (screensaverDurationVal) {
+      setScreensaverDuration(parseInt(screensaverDurationVal));
+    }
+    if (screensaverTypeVal) {
+      setScreensaverType(screensaverTypeVal);
     }
   }
 
@@ -541,6 +612,66 @@ export function AppContextProvider({ children }) {
   }
 
   /**
+   * Save screensaver enabled state
+   */
+  function saveScreensaverEnabled(value) {
+    setScreensaverEnabled(value);
+    window.localStorage.setItem(SCREENSAVER_ENABLED_KEY, value.toString());
+  }
+
+  /**
+   * Save screensaver timeout
+   */
+  function saveScreensaverTimeout(value) {
+    setScreensaverTimeout(value);
+    window.localStorage.setItem(SCREENSAVER_TIMEOUT_KEY, value.toString());
+  }
+
+  /**
+   * Save screensaver duration
+   */
+  function saveScreensaverDuration(value) {
+    setScreensaverDuration(value);
+    window.localStorage.setItem(SCREENSAVER_DURATION_KEY, value.toString());
+  }
+
+  /**
+   * Save screensaver type
+   */
+  function saveScreensaverType(value) {
+    setScreensaverType(value);
+    window.localStorage.setItem(SCREENSAVER_TYPE_KEY, value);
+  }
+
+  /**
+   * Activate screensaver
+   */
+  function activateScreensaver() {
+    setScreensaverActive(true);
+    setTimeout(() => {
+      deactivateScreensaver();
+    }, screensaverDuration * 60 * 1000);
+  }
+
+  /**
+   * Deactivate screensaver
+   */
+  function deactivateScreensaver() {
+    setScreensaverActive(false);
+    setLastActivityTime(Date.now());
+  }
+
+  /**
+   * Record user activity
+   */
+  function recordActivity() {
+    setLastActivityTime(Date.now());
+    if (screensaverActive) {
+      deactivateScreensaver();
+    }
+  }
+
+  /**
    * Saves settings to `settings.json`
    *
    * @param {Object} settings
@@ -633,6 +764,19 @@ export function AppContextProvider({ children }) {
     updateSunriseSunset,
     sunriseTime,
     sunsetTime,
+    screensaverActive,
+    screensaverEnabled,
+    screensaverTimeout,
+    screensaverDuration,
+    screensaverType,
+    lastActivityTime,
+    saveScreensaverEnabled,
+    saveScreensaverTimeout,
+    saveScreensaverDuration,
+    saveScreensaverType,
+    activateScreensaver,
+    deactivateScreensaver,
+    recordActivity,
   };
 
   return (

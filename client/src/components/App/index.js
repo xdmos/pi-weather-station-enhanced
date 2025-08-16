@@ -5,6 +5,7 @@ import { AppContext } from "~/AppContext";
 import WeatherMap from "~/components/WeatherMap";
 import InfoPanel from "~/components/InfoPanel";
 import Settings from "~/components/Settings";
+import Screensaver from "~/components/Screensaver";
 
 import "!style-loader!css-loader!./overrides.css";
 
@@ -20,6 +21,7 @@ const App = () => {
     loadStoredData,
     darkMode,
     mouseHide,
+    screensaverActive,
   } = useContext(AppContext);
 
   useEffect(() => {
@@ -27,6 +29,11 @@ const App = () => {
     getBrowserGeo();
     loadStoredData();
   }, []);
+
+  // If screensaver is active, show it instead of the main UI
+  if (screensaverActive) {
+    return <Screensaver />;
+  }
 
   return (
     <div
