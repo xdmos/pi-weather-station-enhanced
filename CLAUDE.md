@@ -97,7 +97,7 @@ Located in Settings menu under "SCREENSAVER" section:
 - Monitors: mouse movement, clicks, touches, keyboard input, and scroll events
 - Automatically deactivates on any user interaction
 - Returns to weather display immediately when interrupted
-- Clock display shown in corner during screensaver
+- 24-hour clock display shown in bottom-right corner during screensaver
 
 ### Implementation Details
 - Images rotate every 20 seconds with smooth transitions
@@ -111,7 +111,7 @@ Located in Settings menu under "SCREENSAVER" section:
 ### Timer Components
 - **Main Application Timer**: Bottom-left corner shows countdown to screensaver activation
 - **Screensaver Timer**: Bottom-left corner shows remaining screensaver duration
-- **Clock Display**: Top-right corner shows current time during screensaver
+- **Clock Display**: Bottom-right corner shows current time in 24-hour format during screensaver
 - Updates every second for accurate time tracking
 - Automatically hides when screensaver is disabled or not applicable
 
