@@ -1,0 +1,16 @@
+[Unit]
+Description=Pi Weather Station
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=pi5
+WorkingDirectory=/home/pi5/Downloads/pi-weather-station
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=10
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

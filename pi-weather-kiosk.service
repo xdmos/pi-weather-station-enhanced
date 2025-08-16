@@ -1,0 +1,18 @@
+[Unit]
+Description=Pi Weather Station Kiosk Mode
+After=graphical.target
+Wants=graphical.target
+Requires=pi-weather-station.service
+
+[Service]
+Type=simple
+User=pi5
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/pi5/.Xauthority
+ExecStartPre=/bin/sleep 15
+ExecStart=/usr/bin/chromium-browser --start-fullscreen --kiosk --no-sandbox --disable-infobars --disable-restore-session-state --disable-session-crashed-bubble --disable-features=TranslateUI --disable-ipc-flooding-protection http://localhost:8080/
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
