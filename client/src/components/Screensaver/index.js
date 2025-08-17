@@ -54,7 +54,7 @@ const Screensaver = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [screensaverDuration, deactivateScreensaver]);
+  }, [screensaverDuration]); // Removed deactivateScreensaver from dependencies
 
   // Image rotation effect
   useEffect(() => {

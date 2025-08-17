@@ -656,7 +656,8 @@ export function AppContextProvider({ children }) {
    */
   function deactivateScreensaver() {
     setScreensaverActive(false);
-    // Don't reset lastActivityTime here to prevent immediate re-activation
+    // Reset activity time when screensaver ends naturally (not from user interaction)
+    setLastActivityTime(Date.now());
   }
 
   /**
