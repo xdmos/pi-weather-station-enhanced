@@ -19,7 +19,7 @@ Sunrise and Sunset times are provided by [Sunrise-Sunset](https://sunrise-sunset
 - **Automatic Dark Mode**: Switches between light/dark themes based on sunrise/sunset times
 - **System Monitoring**: Real-time CPU temperature and fan speed monitoring
 - **Screensaver Protection**: Prevents pixel burn-in with configurable timeout and content types
-- **5-Day Forecast**: Updated from 7-day due to API limitations
+- **4-Day Forecast**: Shows next 4 days excluding current day for future-focused planning
 - **Improved Performance**: Optimized data fetching and reduced API calls
 - **Enhanced UI**: Better responsive design and touch interactions
 
