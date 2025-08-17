@@ -1,7 +1,7 @@
 
 # Pi Weather Station Enhanced
 
-This is an enhanced weather station designed to be used with a Raspberry Pi on the official 7" 800x480 touchscreen.
+This is an enhanced weather station designed to be used with a Raspberry Pi on 5" 800x600 touchscreens.
 
 ![pi-weather-station](pi-weather-station.png)
 
