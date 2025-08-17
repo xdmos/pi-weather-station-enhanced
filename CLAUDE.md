@@ -20,6 +20,7 @@ Pi Weather Station is a React-based weather application designed for Raspberry P
 - **Screensaver**: Pixel burn-in prevention component with three display modes (images, videos, animations)
 - **ScreensaverCountdown**: Timer component showing countdown to screensaver activation
 - **SystemInfo**: System monitoring component displaying CPU temperature and fan speed
+- **TopControlButtons**: Touch-optimized control buttons relocated to top-left area for easy access
 
 ### API Integration
 - **Weather Data**: Open-Meteo API (free, no key required) for current/hourly/daily weather
@@ -65,10 +66,13 @@ Settings are stored in `/settings.json` with API keys. Required keys:
 Note: Weather API key is no longer needed as Open-Meteo is free and doesn't require authentication.
 
 ### Dark Mode Implementation
-Automatic dark/light mode switches based on sunrise/sunset times with manual override:
-- **Auto mode** (default): Uses sunrise/sunset API data to determine day/night
-- **Manual mode**: User-controlled via contrast button (right-click to toggle auto/manual)
+Touch-optimized dark/light mode system with three-state cycling:
+- **Light mode**: Bright interface suitable for daytime use
+- **Dark mode**: Dark interface for low-light conditions
+- **Auto mode**: Automatic switching based on sunrise/sunset times (indicated by red border)
+- Single button cycles through: Light → Dark → Auto → Light
 - Updates every minute when in auto mode
+- Optimized for touch interfaces without need for right-click
 
 ### Build Notes
 - Requires `NODE_OPTIONS=--openssl-legacy-provider` due to legacy webpack/crypto dependencies
@@ -130,6 +134,14 @@ Located in Settings menu under "SCREENSAVER" section:
 - **Bottom Bar Layout**: Screensaver countdown (left), CPU temp (center-left), Fan speed (center-right)
 - Updates every 5 seconds for current system status
 - Compact design optimized for small displays
+
+### Touch Interface Optimization
+- **Relocated Control Buttons**: Moved from bottom-right to top-left for better accessibility
+- **Touch-Friendly Sizing**: 60px wide buttons with proper spacing for finger navigation
+- **Visual Feedback**: Hover and active states for all interactive elements
+- **Dual Theme Support**: Automatic styling adaptation for dark/light modes
+- **Icon Scaling**: 16px icons sized appropriately for button containers
+- **Auto Mode Indicator**: Red border clearly identifies automatic theme mode
 
 ## Display Optimizations
 
