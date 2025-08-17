@@ -142,6 +142,8 @@ Located in Settings menu under "SCREENSAVER" section:
 - **Dual Theme Support**: Automatic styling adaptation for dark/light modes
 - **Icon Scaling**: 16px icons sized appropriately for button containers
 - **Auto Mode Indicator**: Red border clearly identifies automatic theme mode
+- **Improved Panel Layout**: Increased spacing between sunrise/sunset and location sections
+- **Optimized Grid Structure**: Removed obsolete controls area to maximize content space
 
 ## Display Optimizations
 
@@ -157,6 +159,12 @@ The interface has been optimized for small touchscreens (5-7 inch):
   4. API Keys (bottom, scrollable)
 - **Scrollable Interface**: Vertical scrolling with styled scrollbar for overflow content
 - **Responsive Elements**: Buttons and inputs sized for touch interaction
+
+#### Info Panel Layout Improvements
+- **Eliminated Control Area**: Removed obsolete button controls section from grid layout
+- **Enhanced Spacing**: Added 25px margin between sunrise/sunset times and location display
+- **Two-Area Grid**: Simplified from three-area (clock/weather-info/controls) to two-area (clock/weather-info) structure
+- **Better Content Distribution**: Maximized available space for weather information display
 
 #### Style Adjustments for Small Screens
 - Reduced font sizes (10-11px for labels, 9-10px for sublabels)
