@@ -37,6 +37,10 @@ Start the server with
 
 Now set point your browser to `http://localhost:8080` and put it in full screen mode (`F11` in Chromium).
 
+Alternatively, you can launch Chromium directly in fullscreen kiosk mode from terminal:
+
+    $ chromium-browser --start-fullscreen --kiosk http://localhost:8080
+
 ## Access from another machine
 
 It's possible to access the app from another machine, but beware that by doing so you'll be exposing the app to your entire network, and someone else could potentially access the app and retreive your API keys from the settings page. By default the app is only accessible to `localhost`, but if you would like to open it up to your network (at your own risk!), open `/server/index.js` and remove `"localhost"` from the line that contains:
