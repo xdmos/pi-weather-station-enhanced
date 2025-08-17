@@ -7,11 +7,10 @@
   font-family: "Rubik", sans-serif;
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: 90px auto 10px;
+  grid-template-rows: 90px auto;
   grid-template-areas:
     "clock"
-    "weather-info"
-    "controls";
+    "weather-info";
 }
 
 .dark .container {
@@ -28,17 +27,4 @@
 
 .weather-info-container {
   grid-area: weather-info;
-}
-
-.controls {
-  grid-area: controls;  
-  margin: -10px; /* subtract padding */  
-}
-
-.dark .controls{
-  border-top: 1px solid #757575;
-}
-
-.light .controls{
-  border-top: 1px solid #f1f1f1;
 }

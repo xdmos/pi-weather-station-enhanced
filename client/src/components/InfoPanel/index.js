@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { AppContext } from "~/AppContext";
 import Clock from "~/components/Clock";
 import WeatherInfo from "~/components/WeatherInfo";
-import ControlButtons from "~/components/ControlButtons";
 import styles from "./styles.css";
 
 /**
@@ -21,9 +20,6 @@ const InfoPanel = () => {
         </div>
         <div className={styles.weatherInfoContainer}>
           <WeatherInfo />
-        </div>
-        <div className={styles.controls}>
-          <ControlButtons />
         </div>
       </div>
     </div>

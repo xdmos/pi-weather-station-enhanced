@@ -8,6 +8,7 @@ import Settings from "~/components/Settings";
 import Screensaver from "~/components/Screensaver";
 import ScreensaverCountdown from "~/components/ScreensaverCountdown";
 import SystemInfo from "~/components/SystemInfo";
+import TopControlButtons from "~/components/TopControlButtons";
 
 import "!style-loader!css-loader!./overrides.css";
 
@@ -60,6 +61,7 @@ const App = () => {
       </div>
       <ScreensaverCountdown />
       <SystemInfo />
+      <TopControlButtons />
     </div>
   );
 };

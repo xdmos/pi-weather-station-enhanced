@@ -101,11 +101,20 @@ export function AppContextProvider({ children }) {
   }
 
   /**
-   * Manual dark mode toggle (only works when auto mode is off)
+   * Cycle through: light → dark → auto
    */
   function toggleDarkMode() {
-    if (!autoDarkMode) {
-      setDarkMode(!darkMode);
+    if (autoDarkMode) {
+      // Auto mode → Light mode
+      setAutoDarkMode(false);
+      setDarkMode(false);
+    } else if (!darkMode) {
+      // Light mode → Dark mode
+      setDarkMode(true);
+    } else {
+      // Dark mode → Auto mode
+      setAutoDarkMode(true);
+      updateAutoDarkMode();
     }
   }
 

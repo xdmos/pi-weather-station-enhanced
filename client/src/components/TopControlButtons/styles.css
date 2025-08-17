@@ -1,0 +1,87 @@
+.topControlContainer {
+  position: fixed;
+  top: 10px;
+  left: 60px;
+  display: flex;
+  gap: 8px;
+  z-index: 1000;
+}
+
+.controlButton {
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-family: "Rubik", sans-serif;
+  font-size: 16px;
+  backdrop-filter: blur(3px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 32px;
+  position: relative;
+}
+
+/* Dark mode styles */
+.controlButton.dark {
+  background: rgba(0, 0, 0, 0.7);
+  color: #f6f6f4;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.controlButton.dark:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: translateY(-1px);
+}
+
+.controlButton.dark:active {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translateY(0);
+}
+
+/* Light mode styles */
+.controlButton.light {
+  background: rgba(255, 255, 255, 0.9);
+  color: #333333;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.controlButton.light:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px);
+}
+
+.controlButton.light:active {
+  background: rgba(240, 240, 240, 0.95);
+  transform: translateY(0);
+}
+
+/* Active state for both modes */
+.controlButton.active.dark {
+  background: rgba(74, 144, 226, 0.8);
+  border-color: rgba(74, 144, 226, 0.6);
+}
+
+.controlButton.active.dark:hover {
+  background: rgba(74, 144, 226, 0.9);
+}
+
+.controlButton.active.light {
+  background: rgba(74, 144, 226, 0.9);
+  color: white;
+  border-color: rgba(74, 144, 226, 0.8);
+}
+
+.controlButton.active.light:hover {
+  background: rgba(74, 144, 226, 0.95);
+}
+
+/* Auto mode - red border */
+.controlButton.autoMode {
+  border: 2px solid #ff4444 !important;
+}
+
+.controlButton.autoMode:hover {
+  border-color: #ff6666 !important;
+}
