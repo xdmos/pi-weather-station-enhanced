@@ -85,7 +85,10 @@ Prevents OLED/LCD pixel burn-in on displays by activating after a period of inac
 
 ### Recent Fixes
 - Fixed screensaver repeating multiple times after duration expires (removed duplicate timer logic)
-- Screensaver now properly deactivates after set duration without re-triggering
+- Fixed screensaver timer reset loop caused by useEffect dependency array
+- Removed deactivateScreensaver from useEffect dependencies to prevent timer restarts
+- Restored lastActivityTime reset in deactivateScreensaver for proper cycle management
+- Screensaver now properly deactivates after set duration without re-triggering or looping
 
 ### Display Modes
 1. **Landscape Images**: Rotating high-quality random photos from Lorem Picsum with Ken Burns effect
