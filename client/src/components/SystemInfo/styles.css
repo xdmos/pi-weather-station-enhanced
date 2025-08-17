@@ -1,7 +1,13 @@
-.countdown {
+.systemInfoContainer {
   position: fixed;
   bottom: 10px;
-  left: 10px;
+  left: 135px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.systemInfoBox {
   background: rgba(0, 0, 0, 0.7);
   color: #f6f6f4;
   padding: 8px 10px;
@@ -10,11 +16,10 @@
   font-size: 12px;
   backdrop-filter: blur(3px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  z-index: 1000;
-  width: 95px;
+  min-width: 75px;
 }
 
-.label {
+.systemInfoLabel {
   font-size: 10px;
   color: #c7c7c7;
   margin-bottom: 2px;
@@ -22,7 +27,7 @@
   letter-spacing: 0.5px;
 }
 
-.time {
+.systemInfoValue {
   font-size: 14px;
   font-weight: bold;
   color: #f6f6f4;

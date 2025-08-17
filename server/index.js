@@ -5,6 +5,7 @@ const cors = require("cors");
 const open = require("open");
 const ver = require("../package.json").version;
 const appName = require("../package.json").name;
+const { exec } = require("child_process");
 
 const settingsCtrl = require("./settingsCtrl");
 const geolocationCtrl = require("./geolocationCtrl");
@@ -50,3 +51,50 @@ app.patch("/setting", setSetting);
 app.delete("/setting", deleteSetting);
 
 app.get("/geolocation", getCoords);
+
+// System info endpoint
+app.get("/system-info", (req, res) => {
+  const getCpuTemp = () => {
+    return new Promise((resolve) => {
+      exec("cat /sys/class/thermal/thermal_zone0/temp", (error, stdout) => {
+        if (error) {
+          resolve(null);
+        } else {
+          const temp = parseInt(stdout) / 1000;
+          resolve(temp);
+        }
+      });
+    });
+  };
+
+  const getFanSpeed = () => {
+    return new Promise((resolve) => {
+      // Try to get fan speed from GPIO fan control
+      exec("cat /sys/class/hwmon/hwmon*/fan1_input 2>/dev/null", (error, stdout) => {
+        if (error || !stdout) {
+          // If no hardware fan sensor, try to get PWM fan speed
+          exec("cat /sys/class/thermal/cooling_device*/cur_state 2>/dev/null | head -1", (error2, stdout2) => {
+            if (error2 || !stdout2) {
+              resolve(null);
+            } else {
+              const state = parseInt(stdout2);
+              // Convert state to percentage (assuming 0-4 states)
+              const percentage = (state / 4) * 100;
+              resolve(percentage);
+            }
+          });
+        } else {
+          const rpm = parseInt(stdout);
+          resolve(rpm);
+        }
+      });
+    });
+  };
+
+  Promise.all([getCpuTemp(), getFanSpeed()]).then(([cpuTemp, fanSpeed]) => {
+    res.json({
+      cpuTemp,
+      fanSpeed
+    });
+  });
+});

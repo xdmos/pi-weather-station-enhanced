@@ -19,6 +19,7 @@ Pi Weather Station is a React-based weather application designed for Raspberry P
 - **WeatherCharts**: Chart.js-based hourly (24h) and daily (5-day) forecast visualizations
 - **Screensaver**: Pixel burn-in prevention component with three display modes (images, videos, animations)
 - **ScreensaverCountdown**: Timer component showing countdown to screensaver activation
+- **SystemInfo**: System monitoring component displaying CPU temperature and fan speed
 
 ### API Integration
 - **Weather Data**: Open-Meteo API (free, no key required) for current/hourly/daily weather
@@ -27,6 +28,7 @@ Pi Weather Station is a React-based weather application designed for Raspberry P
 - **Reverse Geocoding**: LocationIQ API (optional) for location names
 - **Sunrise/Sunset**: Sunrise-Sunset.org API (free, no key required)
 - **Screensaver Images**: Lorem Picsum API (free, no key required) for high-quality random images
+- **System Monitoring**: `/system-info` endpoint provides CPU temperature and fan speed data
 
 ### State Management Pattern
 All application state flows through AppContext with specific update functions for each data type. Weather data updates automatically on intervals (current: 3min, hourly: 1hr, daily: 24hr). Screensaver state includes activity tracking, timeout management, and countdown timers.
@@ -81,6 +83,10 @@ Weather radar integration uses RainViewer's tile API with timestamp-based URLs. 
 ### Purpose
 Prevents OLED/LCD pixel burn-in on displays by activating after a period of inactivity.
 
+### Recent Fixes
+- Fixed screensaver repeating multiple times after duration expires (removed duplicate timer logic)
+- Screensaver now properly deactivates after set duration without re-triggering
+
 ### Display Modes
 1. **Landscape Images**: Rotating high-quality random photos from Lorem Picsum with Ken Burns effect
 2. **Nature Videos**: Looping scenic videos (streamed from internet)
@@ -114,6 +120,13 @@ Located in Settings menu under "SCREENSAVER" section:
 - **Clock Display**: Bottom-right corner shows current time in 24-hour format during screensaver
 - Updates every second for accurate time tracking
 - Automatically hides when screensaver is disabled or not applicable
+
+### System Monitoring Display
+- **CPU Temperature**: Shows real-time CPU temperature in Celsius
+- **Fan Speed**: Displays fan speed as percentage or RPM (depending on available sensors)
+- **Bottom Bar Layout**: Screensaver countdown (left), CPU temp (center-left), Fan speed (center-right)
+- Updates every 5 seconds for current system status
+- Compact design optimized for small displays
 
 ## Display Optimizations
 

@@ -648,9 +648,7 @@ export function AppContextProvider({ children }) {
    */
   function activateScreensaver() {
     setScreensaverActive(true);
-    setTimeout(() => {
-      deactivateScreensaver();
-    }, screensaverDuration * 60 * 1000);
+    // Timer is handled by the Screensaver component itself
   }
 
   /**
@@ -658,17 +656,17 @@ export function AppContextProvider({ children }) {
    */
   function deactivateScreensaver() {
     setScreensaverActive(false);
-    setLastActivityTime(Date.now());
+    // Don't reset lastActivityTime here to prevent immediate re-activation
   }
 
   /**
    * Record user activity
    */
   function recordActivity() {
-    setLastActivityTime(Date.now());
     if (screensaverActive) {
       deactivateScreensaver();
     }
+    setLastActivityTime(Date.now());
   }
 
   /**

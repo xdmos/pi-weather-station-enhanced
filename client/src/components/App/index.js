@@ -7,6 +7,7 @@ import InfoPanel from "~/components/InfoPanel";
 import Settings from "~/components/Settings";
 import Screensaver from "~/components/Screensaver";
 import ScreensaverCountdown from "~/components/ScreensaverCountdown";
+import SystemInfo from "~/components/SystemInfo";
 
 import "!style-loader!css-loader!./overrides.css";
 
@@ -58,6 +59,7 @@ const App = () => {
         </div>
       </div>
       <ScreensaverCountdown />
+      <SystemInfo />
     </div>
   );
 };
