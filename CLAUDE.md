@@ -82,6 +82,11 @@ Touch-optimized dark/light mode system with three-state cycling:
 ### Map Integration
 Weather radar integration uses RainViewer's tile API with timestamp-based URLs. Radar animation cycles through available timestamps when enabled. Map click events update location and trigger weather data refresh.
 
+**Map Display Optimizations:**
+- **Clean Interface**: All map attribution and watermarks hidden for professional appearance
+- **Full Screen Usage**: Removed Leaflet/Mapbox attribution controls to maximize map area
+- **Touch-Optimized**: Map interactions optimized for touchscreen navigation
+
 ## Screensaver Feature
 
 ### Purpose
@@ -160,18 +165,41 @@ The interface has been optimized for small touchscreens (5-7 inch):
 - **Scrollable Interface**: Vertical scrolling with styled scrollbar for overflow content
 - **Responsive Elements**: Buttons and inputs sized for touch interaction
 
+#### Containerized Layout System
+The interface uses a modular container-based layout for optimal organization and space utilization:
+
+**Layout Structure:**
+1. **Header Container**: Date, time, sunrise/sunset times (transparent background)
+2. **Location Container**: User location display (minimal padding, positioned directly under header)
+3. **Current Weather Container**: Weather icon with current/apparent temperature in horizontal layout
+4. **Weather Details Container**: Four weather metrics (precipitation, clouds, wind, humidity) in horizontal grid
+5. **Temperature Chart Container**: 24-hour temperature and precipitation visualization
+6. **Daily Forecast Container**: 4-day forecast with horizontal temperature display (max/min in same line)
+
+**Container Features:**
+- **Subtle Visual Separation**: Each container has rounded borders and semi-transparent backgrounds
+- **Ultra-Compact Spacing**: 2px gaps between containers on 800x600 displays for maximum content density
+- **Responsive Padding**: 4px internal padding on small screens, larger on desktop displays
+- **No Redundant Labels**: Removed "4 Day Forecast" title to save vertical space
+- **Zero-Margin Location**: Location positioned directly under sunrise/sunset with no gap
+- **Theme-Consistent Design**: Weather icons and statistics adapt to dark/light mode themes
+- **Transparent Backgrounds**: Weather detail cards use transparent backgrounds with gray borders
+- **Future-Focused Forecast**: Daily forecast shows next 4 days excluding current day
+
 #### Info Panel Layout Improvements
 - **Eliminated Control Area**: Removed obsolete button controls section from grid layout
-- **Enhanced Spacing**: Added 25px margin between sunrise/sunset times and location display
-- **Two-Area Grid**: Simplified from three-area (clock/weather-info/controls) to two-area (clock/weather-info) structure
+- **Enhanced Spacing**: Optimized container spacing for different screen sizes
+- **Flex-Based Layout**: Modern flexbox layout system replacing grid for better responsive behavior
 - **Better Content Distribution**: Maximized available space for weather information display
+- **Wider Side Panel**: Increased from 250px to 300px for better content accommodation
 
 #### Style Adjustments for Small Screens
 - Reduced font sizes (10-11px for labels, 9-10px for sublabels)
 - Smaller buttons (26x26px base, 45px width for unit toggles)
-- Compact margins and padding throughout
+- Ultra-compact margins and padding (2-4px on 800x600 displays)
 - Dark dropdown options for better contrast
 - Media queries for screens under 480px height and 800px width
+- Optimized border-radius (3px on small screens, 4-6px on larger displays)
 
 ## Autostart Configuration
 

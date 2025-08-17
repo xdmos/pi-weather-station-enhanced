@@ -122,6 +122,8 @@
   border-radius: 4px;
   padding: 5px 1px;
   min-width: 0;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  background: transparent;
 }
 
 /* Optimizations for small displays (800x600) */
@@ -139,13 +141,13 @@
 }
 
 .light-stat {
-  background: white;
-  border: 1px solid #333;
+  background: transparent;
+  border: 1px solid rgba(128, 128, 128, 0.4);
 }
 
 .dark-stat {
-  background: #3a3a3a;
-  border: 1px solid #555;
+  background: transparent;
+  border: 1px solid rgba(128, 128, 128, 0.4);
 }
 
 .stat-label {

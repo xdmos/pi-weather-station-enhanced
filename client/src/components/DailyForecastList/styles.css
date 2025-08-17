@@ -56,10 +56,17 @@
 
 .weatherIcon {
   font-size: 28px;
-  color: #4a90e2;
   margin-bottom: 8px;
   display: flex;
   justify-content: center;
+}
+
+.container.light .weatherIcon {
+  color: #333;
+}
+
+.container.dark .weatherIcon {
+  color: #ccc;
 }
 
 .temperatures {

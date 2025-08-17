@@ -77,18 +77,18 @@ const DailyForecastList = () => {
   return (
     <div className={`${styles.container} ${darkMode ? styles.dark : styles.light}`}>
       <div className={styles.forecastList}>
-        {time?.slice(0, 4).map((day, index) => (
+        {time?.slice(1, 5).map((day, index) => (
           <div key={index} className={styles.dayItem}>
             <div className={styles.dayName}>{getDayName(day)}</div>
             <div className={styles.weatherIcon}>
-              <InlineIcon icon={getWeatherIcon(weatherCode[index])} />
+              <InlineIcon icon={getWeatherIcon(weatherCode[index + 1])} />
             </div>
             <div className={styles.temperatures}>
               <span className={styles.tempMax}>
-                {convertTemp(tempMax[index], tempUnit)}°
+                {convertTemp(tempMax[index + 1], tempUnit)}°
               </span>
               <span className={styles.tempMin}>
-                {convertTemp(tempMin[index], tempUnit)}°
+                {convertTemp(tempMin[index + 1], tempUnit)}°
               </span>
             </div>
           </div>

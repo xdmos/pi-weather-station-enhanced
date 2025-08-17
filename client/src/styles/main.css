@@ -2,3 +2,12 @@ body {
     font-family: Rubik;  
     margin: 0px;    
   }
+
+/* Hide map attribution/watermark */
+.leaflet-control-attribution,
+.leaflet-attribution-flag,
+.mapboxgl-ctrl-attrib,
+.mapboxgl-ctrl-bottom-left,
+.mapboxgl-ctrl-bottom-right {
+    display: none !important;
+}
