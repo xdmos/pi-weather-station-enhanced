@@ -5,7 +5,7 @@ import WeatherInfo from "~/components/WeatherInfo";
 import styles from "./styles.css";
 
 /**
- * Info Panel
+ * Info Panel with organized containers
  *
  * @returns {JSX.Element} Info Panel
  */
@@ -15,10 +15,13 @@ const InfoPanel = () => {
   return (
     <div className={`${darkMode ? styles.dark : styles.light} ${styles.panel}`}>
       <div className={styles.container}>
-        <div className={styles.clockContainer}>
+        {/* Container 1: Date, time, sunrise/sunset */}
+        <div className={styles.headerContainer}>
           <Clock />
         </div>
-        <div className={styles.weatherInfoContainer}>
+        
+        {/* Container 2-5: Weather components */}
+        <div className={styles.weatherContainer}>
           <WeatherInfo />
         </div>
       </div>

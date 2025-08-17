@@ -2,6 +2,21 @@
   max-height: 36px;
   min-height: 20px;
   overflow: hidden;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  padding: 10px 0;
+}
+
+/* Optimizations for small displays (800x600) */
+@media (max-width: 800px) and (max-height: 600px) {
+  .container {
+    font-size: 14px;
+    padding: 5px 0;
+    max-height: 28px;
+    min-height: 16px;
+  }
 }
 
 .err {

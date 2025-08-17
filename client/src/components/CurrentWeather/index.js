@@ -14,11 +14,7 @@ import dayCloudy from "@iconify/icons-wi/day-cloudy";
 import nightAltCloudy from "@iconify/icons-wi/night-alt-cloudy";
 import dayRain from "@iconify/icons-wi/day-rain";
 import nightRain from "@iconify/icons-wi/night-rain";
-import humidityAlt from "@iconify/icons-carbon/humidity-alt";
-import cloudIcon from "@iconify/icons-wi/cloud";
-import strongWind from "@iconify/icons-wi/strong-wind";
 import snowIcon from "@iconify/icons-ion/snow";
-import rainIcon from "@iconify/icons-wi/rain";
 import rainMix from "@iconify/icons-wi/rain-mix";
 import thunderstormIcon from "@iconify/icons-wi/thunderstorm";
 import fogIcon from "@iconify/icons-wi/fog";
@@ -32,7 +28,7 @@ import daySunnyOvercast from "@iconify/icons-wi/day-sunny-overcast";
  * @returns {JSX.Element} Current weather conditions component
  */
 const CurrentWeather = () => {
-  const { currentWeatherData, tempUnit, speedUnit, sunriseTime, sunsetTime } = useContext(
+  const { currentWeatherData, tempUnit, speedUnit, sunriseTime, sunsetTime, darkMode } = useContext(
     AppContext
   );
   const weatherData = currentWeatherData?.current;
@@ -42,60 +38,51 @@ const CurrentWeather = () => {
       relative_humidity_2m: humidity,
       precipitation: precipitationIntensity,
       temperature_2m: temperature,
+      apparent_temperature: apparentTemperature,
       weather_code: weatherCode,
       wind_speed_10m: windSpeed,
     } = weatherData;
     const daylight = sunriseTime && sunsetTime ? isDaylight(new Date(sunriseTime), new Date(sunsetTime)) : true;
-    const { icon: weatherIcon, desc: weatherDesc } =
+    const { icon: weatherIcon } =
       parseWeatherCode(weatherCode, daylight) || {};
 
     return (
-      <div className={styles.container}>
-        <div className={styles.currentTemp}>
-          {convertTemp(temperature, tempUnit)}
-          <InlineIcon icon={degreesIcon} />
-        </div>
-        <div className={styles.iconContainer}>
-          <div className={styles.weatherIcon}>
-            {weatherIcon ? <InlineIcon icon={weatherIcon} /> : null}
-          </div>
-        </div>
-        <div className={styles.stats}>
-          <div>
-            <div className={styles.statItem}>
-              <div>
-                <InlineIcon
-                  icon={precipitationIntensity > 0 ? rainIcon : cloudIcon}
-                />
-              </div>
-              <div>{precipitationIntensity?.toFixed(1) || 0} mm</div>
+      <div className={`${styles.container} ${darkMode ? styles.dark : ''}`}>
+        <div className={styles.topSection}>
+          <div className={styles.tempContainer}>
+            <div className={`${styles.weatherIcon} ${darkMode ? styles.darkIcon : ''}`}>
+              {weatherIcon ? <InlineIcon icon={weatherIcon} /> : null}
             </div>
-            <div className={styles.statItem}>
-              <div>
-                <InlineIcon icon={cloudIcon} />
-              </div>
-              <div>{parseInt(cloudCover)}%</div>
-            </div>
-            <div className={styles.statItem}>
-              <div>
-                <InlineIcon icon={strongWind} />
-              </div>
-              <div className={styles.textUnit}>
-                <div>{convertSpeed(windSpeed, speedUnit)}</div>
-                <div className={styles.statUnit}>
-                  {speedUnit === "mph" ? " mph" : " m/s"}
-                </div>
-              </div>
-            </div>
-            <div className={styles.statItem}>
-              <div>
-                <InlineIcon icon={humidityAlt} />
-              </div>
-              <div>{parseInt(humidity)}%</div>
+            <div className={styles.currentTemp}>
+              {convertTemp(temperature, tempUnit)}
+              <span className={styles.degrees}><InlineIcon icon={degreesIcon} /></span>
+              <span className={styles.slash}> / </span>
+              <span className={styles.apparentTemp}>
+                {convertTemp(apparentTemperature, tempUnit)}
+              </span>
             </div>
           </div>
         </div>
-        <div className={styles.description}>{weatherDesc || ""}</div>
+        <div className={styles.statsHorizontal}>
+          <div className={`${styles.statItem} ${darkMode ? styles.darkStat : styles.lightStat}`}>
+            <div className={styles.statLabel}>Precip.</div>
+            <div className={styles.statValue}>{precipitationIntensity?.toFixed(1) || 0} mm</div>
+          </div>
+          <div className={`${styles.statItem} ${darkMode ? styles.darkStat : styles.lightStat}`}>
+            <div className={styles.statLabel}>Clouds</div>
+            <div className={styles.statValue}>{parseInt(cloudCover)}%</div>
+          </div>
+          <div className={`${styles.statItem} ${darkMode ? styles.darkStat : styles.lightStat}`}>
+            <div className={styles.statLabel}>Wind</div>
+            <div className={styles.statValue}>
+              {convertSpeed(windSpeed, speedUnit)} {speedUnit === "mph" ? "mph" : "m/s"}
+            </div>
+          </div>
+          <div className={`${styles.statItem} ${darkMode ? styles.darkStat : styles.lightStat}`}>
+            <div className={styles.statLabel}>Humidity</div>
+            <div className={styles.statValue}>{parseInt(humidity)}%</div>
+          </div>
+        </div>
       </div>
     );
   } else {

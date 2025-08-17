@@ -1,16 +1,42 @@
 .date{
     display: flex;
-    justify-content: flex-end;    
-    font-size: 14px;
+    justify-content: center;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 5px;
 }
 
 .time{
     display: flex;
-    justify-content: flex-end;
-    font-size: 45px;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: 500;
+    color: #333;
 }
 
 .sun-rise-set-container{
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
+    margin-top: 8px;
+    margin-bottom: 0;
+    font-size: 12px;
+    color: #777;
+}
+
+/* Optimizations for small displays (800x600) */
+@media (max-width: 800px) and (max-height: 600px) {
+  .date {
+    font-size: 11px;
+    margin-bottom: 3px;
+  }
+  
+  .time {
+    font-size: 28px;
+  }
+  
+  .sun-rise-set-container {
+    margin-top: 5px;
+    margin-bottom: 0;
+    font-size: 10px;
+  }
 }

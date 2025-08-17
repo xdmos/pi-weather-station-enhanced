@@ -44,10 +44,10 @@ export function AppContextProvider({ children }) {
   const [dailyWeatherDataErrMsg, setDailyWeatherDataErrMsg] = useState(null);
   const [panToCoords, setPanToCoords] = useState(null);
   const [markerIsVisible, setMarkerIsVisible] = useState(true);
-  const [tempUnit, setTempUnit] = useState("f"); // fahrenheit or celsius
-  const [speedUnit, setSpeedUnit] = useState("mph"); // mph or ms for m/s
-  const [lengthUnit, setLengthUnit] = useState("in"); // in or mm
-  const [clockTime, setClockTime] = useState("12"); // 12h or 24h time for clock
+  const [tempUnit, setTempUnit] = useState("c"); // fahrenheit or celsius
+  const [speedUnit, setSpeedUnit] = useState("ms"); // mph or ms for m/s
+  const [lengthUnit, setLengthUnit] = useState("mm"); // in or mm
+  const [clockTime, setClockTime] = useState("24"); // 12h or 24h time for clock
   const [animateWeatherMap, setAnimateWeatherMap] = useState(false);
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
   const [customLat, setCustomLat] = useState(null);
@@ -574,7 +574,7 @@ export function AppContextProvider({ children }) {
         return reject("No coords");
       }
 
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code,cloud_cover&timezone=auto`;
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,wind_speed_10m,weather_code,cloud_cover&timezone=auto`;
       console.log('Open-Meteo API request:', url);
       
       axios

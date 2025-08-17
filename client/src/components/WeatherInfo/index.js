@@ -4,7 +4,7 @@ import { AppContext } from "~/AppContext";
 import styles from "./styles.css";
 import LocationName from "~/components/LocationName";
 import CurrentWeather from "~/components/CurrentWeather";
-import DailyChart from "~/components/weatherCharts/DailyChart";
+import DailyForecastList from "~/components/DailyForecastList";
 import HourlyChart from "~/components/weatherCharts/HourlyChart";
 
 const CURRENT_WEATHER_DATA_UPDATE_INTERVAL = 3 * 60 * 1000; //every 3 minutes
@@ -134,17 +134,24 @@ const WeatherInfo = () => {
   if (currentWeatherData) {
     return (
       <div className={styles.container}>
-        <div className={styles.location}>
+        {/* Container 1: Location */}
+        <div className={styles.locationContainer}>
           <LocationName />
         </div>
-        <div>
+        
+        {/* Container 2: Current weather with icon and temp */}
+        <div className={styles.currentWeatherContainer}>
           <CurrentWeather />
         </div>
-        <div className={styles.weatherChart}>
+        
+        {/* Container 3: 24h temperature chart */}
+        <div className={styles.chartContainer}>
           <HourlyChart />
         </div>
-        <div className={styles.weatherChart}>
-          <DailyChart />
+        
+        {/* Container 4: 4 day forecast */}
+        <div className={styles.forecastContainer}>
+          <DailyForecastList />
         </div>
       </div>
     );

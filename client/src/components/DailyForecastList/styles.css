@@ -1,0 +1,95 @@
+.container {
+  padding: 15px;
+}
+
+.container.light {
+  background: transparent;
+}
+
+.container.dark {
+  background: transparent;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.container.light .title {
+  color: #333;
+}
+
+.container.dark .title {
+  color: #fff;
+}
+
+.forecastList {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  justify-content: space-around;
+}
+
+.dayItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.dayName {
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.container.light .dayName {
+  color: #666;
+}
+
+.container.dark .dayName {
+  color: #ccc;
+}
+
+.weatherIcon {
+  font-size: 28px;
+  color: #4a90e2;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.temperatures {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  justify-content: center;
+}
+
+.tempMax {
+  font-weight: 500;
+}
+
+.tempMin {
+}
+
+.container.light .tempMax {
+  color: #333;
+}
+
+.container.light .tempMin {
+  color: #999;
+}
+
+.container.dark .tempMax {
+  color: #fff;
+}
+
+.container.dark .tempMin {
+  color: #bbb;
+}

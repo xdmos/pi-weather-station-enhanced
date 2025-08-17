@@ -1,15 +1,118 @@
 .container {
-  padding: 0px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.location {
-  margin-top: 25px;
-  margin-bottom: 3px;
+/* Optimizations for small displays (800x600) */
+@media (max-width: 800px) and (max-height: 600px) {
+  .container {
+    gap: 2px;
+  }
+}
+
+/* Container 1: Location */
+.locationContainer {
+  padding: 0;
+  margin: 0;
+  border-radius: 4px;
+  text-align: center;
+  background: transparent !important;
+  border: none !important;
+}
+
+.dark .locationContainer {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.light .locationContainer {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Container 2: Current weather */
+.currentWeatherContainer {
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.dark .currentWeatherContainer {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.light .currentWeatherContainer {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Container 3: Chart */
+.chartContainer {
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.dark .chartContainer {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.light .chartContainer {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Container 4: Forecast */
+.forecastContainer {
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.dark .forecastContainer {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.light .forecastContainer {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Optimizations for small displays (800x600) */
+@media (max-width: 800px) and (max-height: 600px) {
+  .locationContainer,
+  .currentWeatherContainer,
+  .chartContainer,
+  .forecastContainer {
+    padding: 4px;
+    border-radius: 3px;
+  }
+}
+
+.current-weather-section.light {
+  background: transparent;
+}
+
+.current-weather-section.dark {
+  background: transparent;
 }
 
 .weather-chart {
   display: flex;
   justify-content: center;
+}
+
+.daily-forecast {
+  margin-top: 5px;
+}
+
+.daily-forecast.light {
+  background: transparent;
+}
+
+.daily-forecast.dark {
+  background: transparent;
 }
 
 .loading-container {
