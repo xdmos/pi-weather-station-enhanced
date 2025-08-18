@@ -25,6 +25,7 @@ const Settings = () => {
     setSettingsMenuOpen,
     mouseHide,
     saveMouseHide,
+    darkMode,
   } = useContext(AppContext);
 
   const [mapsKey, setMapsKey] = useState(null);
@@ -74,7 +75,7 @@ const Settings = () => {
       timeout={300}
       classNames="animate"
     >
-      <div className={styles.container}>
+      <div className={`${styles.container} ${darkMode ? styles.darkMode : styles.lightMode}`}>
         <div className={styles.header}>SETTINGS</div>
         <div
           className={styles.closeButton}

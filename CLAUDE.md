@@ -52,6 +52,11 @@ All application state flows through AppContext with specific update functions fo
 - **Larger title**: "SETTINGS" increased from 12px to 24px font
 - **Touch-friendly close button**: X button enlarged to 32px with 48x48px touch area
 - **Reorganized layout**: API keys section moved to top, HIDE MOUSE and SAVE moved to bottom
+- **Compact window**: Width reduced to 380px for optimal space utilization
+- **Theme-aware styling**: Solid backgrounds and button colors adapt to light/dark modes
+  - Light mode: Light gray background (#e8e8e8) with bright buttons
+  - Dark mode: Dark gray background (#2c2c2c) with traditional dark buttons
+- **Non-transparent design**: Removed blur effects and transparency for cleaner appearance
 
 ## Common Commands
 

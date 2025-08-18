@@ -1,15 +1,23 @@
 .container {
   height: calc(100vh - 20px); /* subtract padding */
-  width: calc(100vw - 320px); /* subtract info panel and padding */
-  background-color: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(3px);
+  width: 380px; /* More compact width */
   padding: 10px;
-  color: #f6f6f4;
   font-family: "Rubik", sans-serif;
-  border-right: 1px solid rgba(0, 0, 0, 0.15);
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.container.darkMode {
+  background-color: #2c2c2c; /* Dark gray */
+  color: #f6f6f4;
+  border-right: 1px solid #444444;
+}
+
+.container.lightMode {
+  background-color: #e8e8e8; /* Light gray */
+  color: #333333;
+  border-right: 1px solid #cccccc;
 }
 
 .header {
@@ -92,24 +100,54 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Dark mode buttons */
+.darkMode .button {
   background: linear-gradient(#5d5c5c, #4e4e4e);
   border-top: 1px solid #757575;
   border-left: 1px solid #757575;
   border-right: 1px solid #4c4c4c;
   border-bottom: 1px solid #4c4c4c;
+  color: #f6f6f4;
+}
+
+/* Light mode buttons */
+.lightMode .button {
+  background: linear-gradient(#f0f0f0, #e0e0e0);
+  border-top: 1px solid #d0d0d0;
+  border-left: 1px solid #d0d0d0;
+  border-right: 1px solid #c0c0c0;
+  border-bottom: 1px solid #c0c0c0;
+  color: #333333;
 }
 
 .show-mouse.button {
   cursor: pointer;
 }
 
-.button.down {
+/* Pressed button styles */
+.darkMode .button.down {
   color: #4e4e4e;
   background: linear-gradient(#d6d6d6, #c7c7c7);
 }
 
-.button:active {
+.lightMode .button.down {
+  color: #ffffff;
+  background: linear-gradient(#4a90e2, #357abd);
+  border-top: 1px solid #357abd;
+  border-left: 1px solid #357abd;
+  border-right: 1px solid #2968a3;
+  border-bottom: 1px solid #2968a3;
+}
+
+/* Active button styles */
+.darkMode .button:active {
   background: linear-gradient(#4e4e4e, #5d5c5c);
+}
+
+.lightMode .button:active {
+  background: linear-gradient(#d0d0d0, #e0e0e0);
 }
 
 .settings-item {
