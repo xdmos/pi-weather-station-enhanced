@@ -50,11 +50,6 @@ For automatic startup on boot, use the included systemd services:
     $ sudo systemctl enable pi-weather-station.service
     $ sudo systemctl enable pi-weather-kiosk.service
 
-**For development**, disable auto-restart services:
-
-    $ sudo systemctl stop pi-weather-station.service pi-weather-kiosk.service
-    $ sudo systemctl disable pi-weather-station.service pi-weather-kiosk.service
-
 # Settings
 
 - **API Keys**: Mapbox token required for maps, LocationIQ token optional for location names
