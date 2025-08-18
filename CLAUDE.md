@@ -34,6 +34,25 @@ Pi Weather Station is a React-based weather application designed for Raspberry P
 ### State Management Pattern
 All application state flows through AppContext with specific update functions for each data type. Weather data updates automatically on intervals (current: 3min, hourly: 1hr, daily: 24hr). Screensaver state includes activity tracking, timeout management, and countdown timers.
 
+### Recent Simplifications (August 2025)
+**Screensaver Settings Removed**: All screensaver configuration options removed from Settings menu. Fixed parameters:
+- **Always enabled** - cannot be disabled
+- **Timeout**: Fixed at 60 minutes (1 hour)
+- **Duration**: Fixed at 2 minutes
+- **Type**: Fixed to "images" (landscape photos with Ken Burns effect)
+- **Source**: Lorem Picsum API for high-quality random images
+
+**Units Settings Removed**: All unit toggle buttons removed from Settings menu. Fixed units:
+- **Temperature**: Celsius (°C)
+- **Wind Speed**: m/s (meters per second)  
+- **Precipitation**: mm (millimeters)
+- **Time Format**: 24-hour format
+
+**Settings Menu Improvements**:
+- **Larger title**: "SETTINGS" increased from 12px to 24px font
+- **Touch-friendly close button**: X button enlarged to 32px with 48x48px touch area
+- **Reorganized layout**: API keys section moved to top, HIDE MOUSE and SAVE moved to bottom
+
 ## Common Commands
 
 ### Development
@@ -49,6 +68,17 @@ cd client && NODE_OPTIONS=--openssl-legacy-provider npm run prod
 
 # Development build with watch mode
 cd client && npm run dev
+
+# Quick restart (faster than killing processes)
+npm restart
+
+# Fast development workflow
+cd client && NODE_OPTIONS=--openssl-legacy-provider npm run prod
+pkill chromium && sleep 2 && DISPLAY=:0 chromium-browser --start-fullscreen --kiosk http://localhost:8080 &
+
+# Disable auto-restart services during development
+sudo systemctl stop pi-weather-station.service pi-weather-kiosk.service
+sudo systemctl disable pi-weather-station.service pi-weather-kiosk.service
 ```
 
 ### Weather API Migration
@@ -257,7 +287,25 @@ On system boot, the Pi Weather Station will:
 The kiosk service uses these Chromium flags:
 - `--start-fullscreen`: Starts in fullscreen mode
 - `--kiosk`: Enables kiosk mode (no address bar, etc.)
-- `--no-sandbox`: Required for systemd service execution
-- `--disable-infobars`: Removes info bars
+- `--no-sandbox`: Required for systemd service execution (optional for manual launch)
+- `--disable-infobars`: Removes info bars (optional for manual launch)
 - `--disable-restore-session-state`: Prevents session restore dialogs
 - `--disable-session-crashed-bubble`: Prevents crash recovery dialogs
+
+### Development vs Production
+**Development Mode**: For testing and development, disable systemd services to prevent automatic restarts:
+```bash
+sudo systemctl stop pi-weather-station.service pi-weather-kiosk.service
+sudo systemctl disable pi-weather-station.service pi-weather-kiosk.service
+```
+
+**Production Mode**: Re-enable systemd services for automatic startup on boot:
+```bash
+sudo systemctl enable pi-weather-station.service pi-weather-kiosk.service
+sudo systemctl start pi-weather-station.service pi-weather-kiosk.service
+```
+
+**Manual Chromium Launch** (simplified for development):
+```bash
+DISPLAY=:0 chromium-browser --start-fullscreen --kiosk http://localhost:8080 &
+```

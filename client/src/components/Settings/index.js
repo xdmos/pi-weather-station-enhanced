@@ -85,29 +85,6 @@ const Settings = () => {
           <InlineIcon icon={closeSharp} />
         </div>
         <div className={styles.settingsContainer}>
-          <ToggleButtons />
-          <ScreensaverSettings />
-          <div className={styles.bottomButtonContainer}>
-            <div>
-              <div className={styles.label}>HIDE MOUSE</div>
-              <ToggleButton
-                button1Label={"ON"}
-                button2Label={"OFF"}
-                val={mouseHide}
-                button1Val={true}
-                button2Val={false}
-                cb={saveMouseHide}
-              />
-            </div>
-            <div className={styles.saveButtonContainer}>
-              <SaveButton
-                mapsKey={mapsKey}
-                geoKey={geoKey}
-                lat={lat}
-                lon={lon}
-              />
-            </div>
-          </div>
           <div className={styles.apiKeysSection}>
             <Input
               label={"CUSTOM STARTING LATITUDE"}
@@ -134,6 +111,27 @@ const Settings = () => {
               current={currentGeoKey}
               cb={setGeoKey}
             />
+          </div>
+          <div className={styles.bottomButtonContainer}>
+            <div>
+              <div className={styles.label}>HIDE MOUSE</div>
+              <ToggleButton
+                button1Label={"ON"}
+                button2Label={"OFF"}
+                val={mouseHide}
+                button1Val={true}
+                button2Val={false}
+                cb={saveMouseHide}
+              />
+            </div>
+            <div className={styles.saveButtonContainer}>
+              <SaveButton
+                mapsKey={mapsKey}
+                geoKey={geoKey}
+                lat={lat}
+                lon={lon}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -187,71 +185,6 @@ SaveButton.propTypes = {
   lon: PropTypes.string,
 };
 
-/**
- * Toggle Buttons Group
- *
- * @returns {JSX.Element} A grouping of toggle buttons
- */
-const ToggleButtons = () => {
-  const {
-    tempUnit,
-    saveTempUnit,
-    speedUnit,
-    saveSpeedUnit,
-    lengthUnit,
-    saveLengthUnit,
-    clockTime,
-    saveClockTime,
-  } = useContext(AppContext);
-
-  return (
-    <div>
-      <div className={styles.label}>UNITS</div>
-      <div className={styles.toggleButtons}>
-        <div>
-          <ToggleButton
-            button1Label={"F"}
-            button2Label={"C"}
-            val={tempUnit}
-            button1Val={"f"}
-            button2Val={"c"}
-            cb={saveTempUnit}
-          />
-        </div>
-        <div>
-          <ToggleButton
-            button1Label={"mph"}
-            button2Label={"m/s"}
-            val={speedUnit}
-            button1Val={"mph"}
-            button2Val={"ms"}
-            cb={saveSpeedUnit}
-          />
-        </div>
-        <div>
-          <ToggleButton
-            button1Label={"in"}
-            button2Label={"mm"}
-            val={lengthUnit}
-            button1Val={"in"}
-            button2Val={"mm"}
-            cb={saveLengthUnit}
-          />
-        </div>
-        <div>
-          <ToggleButton
-            button1Label={"12h"}
-            button2Label={"24h"}
-            val={clockTime}
-            button1Val={"12"}
-            button2Val={"24"}
-            cb={saveClockTime}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
 
 /**
  * Toggle buttons
@@ -409,81 +342,3 @@ Input.propTypes = {
   current: PropTypes.string,
 };
 
-/**
- * Screensaver Settings
- *
- * @returns {JSX.Element} Screensaver settings component
- */
-const ScreensaverSettings = () => {
-  const {
-    screensaverEnabled,
-    screensaverTimeout,
-    screensaverDuration,
-    screensaverType,
-    saveScreensaverEnabled,
-    saveScreensaverTimeout,
-    saveScreensaverDuration,
-    saveScreensaverType,
-  } = useContext(AppContext);
-
-  return (
-    <div className={styles.screensaverSection}>
-      <div className={styles.label}>SCREENSAVER</div>
-      <div className={styles.screensaverOptions}>
-        <div>
-          <div className={styles.sublabel}>Enabled</div>
-          <ToggleButton
-            button1Label={"ON"}
-            button2Label={"OFF"}
-            val={screensaverEnabled}
-            button1Val={true}
-            button2Val={false}
-            cb={saveScreensaverEnabled}
-          />
-        </div>
-        {screensaverEnabled && (
-          <>
-            <div>
-              <div className={styles.sublabel}>Type</div>
-              <select
-                value={screensaverType}
-                onChange={(e) => saveScreensaverType(e.target.value)}
-                className={styles.select}
-              >
-                <option value="images">Landscape Images</option>
-                <option value="video">Nature Videos</option>
-                <option value="animation">Abstract Animation</option>
-              </select>
-            </div>
-            <div>
-              <div className={styles.sublabel}>Timeout</div>
-              <select
-                value={screensaverTimeout}
-                onChange={(e) => saveScreensaverTimeout(parseInt(e.target.value))}
-                className={styles.select}
-              >
-                <option value="30">30 minutes</option>
-                <option value="60">1 hour</option>
-                <option value="120">2 hours</option>
-                <option value="180">3 hours</option>
-              </select>
-            </div>
-            <div>
-              <div className={styles.sublabel}>Duration</div>
-              <select
-                value={screensaverDuration}
-                onChange={(e) => saveScreensaverDuration(parseInt(e.target.value))}
-                className={styles.select}
-              >
-                <option value="1">1 minute</option>
-                <option value="3">3 minutes</option>
-                <option value="5">5 minutes</option>
-                <option value="10">10 minutes</option>
-              </select>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
-};

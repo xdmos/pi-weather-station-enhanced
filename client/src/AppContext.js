@@ -6,15 +6,7 @@ import axios from "axios";
 
 export const AppContext = createContext();
 
-const TEMP_UNIT_STORAGE_KEY = "tempUnit";
-const SPEED_UNIT_STORAGE_KEY = "speedUnit";
-const LENGTH_UNIT_STORAGE_KEY = "lengthUnit";
-const CLOCK_UNIT_STORAGE_KEY = "clockTime";
 const MOUSE_HIDE_STORAGE_KEY = "mouseHide";
-const SCREENSAVER_ENABLED_KEY = "screensaverEnabled";
-const SCREENSAVER_TIMEOUT_KEY = "screensaverTimeout";
-const SCREENSAVER_DURATION_KEY = "screensaverDuration";
-const SCREENSAVER_TYPE_KEY = "screensaverType";
 
 /**
  * App context provider
@@ -44,10 +36,10 @@ export function AppContextProvider({ children }) {
   const [dailyWeatherDataErrMsg, setDailyWeatherDataErrMsg] = useState(null);
   const [panToCoords, setPanToCoords] = useState(null);
   const [markerIsVisible, setMarkerIsVisible] = useState(true);
-  const [tempUnit, setTempUnit] = useState("c"); // fahrenheit or celsius
-  const [speedUnit, setSpeedUnit] = useState("ms"); // mph or ms for m/s
-  const [lengthUnit, setLengthUnit] = useState("mm"); // in or mm
-  const [clockTime, setClockTime] = useState("24"); // 12h or 24h time for clock
+  const [tempUnit] = useState("c"); // Fixed: celsius
+  const [speedUnit] = useState("ms"); // Fixed: m/s
+  const [lengthUnit] = useState("mm"); // Fixed: mm
+  const [clockTime] = useState("24"); // Fixed: 24h time
   const [animateWeatherMap, setAnimateWeatherMap] = useState(false);
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
   const [customLat, setCustomLat] = useState(null);
@@ -56,10 +48,10 @@ export function AppContextProvider({ children }) {
   const [sunriseTime, setSunriseTime] = useState(null);
   const [sunsetTime, setSunsetTime] = useState(null);
   const [screensaverActive, setScreensaverActive] = useState(false);
-  const [screensaverEnabled, setScreensaverEnabled] = useState(true);
-  const [screensaverTimeout, setScreensaverTimeout] = useState(60); // minutes
-  const [screensaverDuration, setScreensaverDuration] = useState(3); // minutes
-  const [screensaverType, setScreensaverType] = useState("images"); // images, video, animation
+  const [screensaverEnabled] = useState(true); // Fixed: always enabled
+  const [screensaverTimeout] = useState(60); // Fixed: 1 hour timeout
+  const [screensaverDuration] = useState(2); // Fixed: 2 minutes duration
+  const [screensaverType] = useState("images"); // Fixed: images type
   const [lastActivityTime, setLastActivityTime] = useState(Date.now());
 
   /**
@@ -194,55 +186,17 @@ export function AppContextProvider({ children }) {
     window.localStorage.setItem(MOUSE_HIDE_STORAGE_KEY, newState);
   }
 
-  /**
-   * Save clock time
-   *
-   * @param {String} newVal `12` or `24`
-   */
-  function saveClockTime(newVal) {
-    setClockTime(newVal);
-    window.localStorage.setItem(CLOCK_UNIT_STORAGE_KEY, newVal);
-  }
-
-  /**
-   * Save temp unit
-   *
-   * @param {String} newVal `f` or `c`
-   */
-  function saveTempUnit(newVal) {
-    setTempUnit(newVal);
-    window.localStorage.setItem(TEMP_UNIT_STORAGE_KEY, newVal);
-  }
-
-  /**
-   * Save speed unit
-   *
-   * @param {String} newVal `mph` or `ms`
-   */
-  function saveSpeedUnit(newVal) {
-    setSpeedUnit(newVal);
-    window.localStorage.setItem(SPEED_UNIT_STORAGE_KEY, newVal);
-  }
-
-  /**
-   * Save length unit
-   *
-   * @param {String} newVal  `in` or `mm`
-   */
-  function saveLengthUnit(newVal) {
-    setLengthUnit(newVal);
-    window.localStorage.setItem(LENGTH_UNIT_STORAGE_KEY, newVal);
-  }
 
   function loadStoredData() {
-    const temp = window.localStorage.getItem(TEMP_UNIT_STORAGE_KEY);
-    const speed = window.localStorage.getItem(SPEED_UNIT_STORAGE_KEY);
-    const length = window.localStorage.getItem(LENGTH_UNIT_STORAGE_KEY);
-    const clock = window.localStorage.getItem(CLOCK_UNIT_STORAGE_KEY);
-    const screensaverEnabledVal = window.localStorage.getItem(SCREENSAVER_ENABLED_KEY);
-    const screensaverTimeoutVal = window.localStorage.getItem(SCREENSAVER_TIMEOUT_KEY);
-    const screensaverDurationVal = window.localStorage.getItem(SCREENSAVER_DURATION_KEY);
-    const screensaverTypeVal = window.localStorage.getItem(SCREENSAVER_TYPE_KEY);
+    // Clean up old settings from localStorage
+    window.localStorage.removeItem("tempUnit");
+    window.localStorage.removeItem("speedUnit");
+    window.localStorage.removeItem("lengthUnit");
+    window.localStorage.removeItem("clockTime");
+    window.localStorage.removeItem("screensaverEnabled");
+    window.localStorage.removeItem("screensaverTimeout");
+    window.localStorage.removeItem("screensaverDuration");
+    window.localStorage.removeItem("screensaverType");
 
     let mouseHide;
     try {
@@ -254,30 +208,6 @@ export function AppContextProvider({ children }) {
     }
 
     setMouseHide(!!mouseHide);
-    if (temp) {
-      setTempUnit(temp);
-    }
-    if (speed) {
-      setSpeedUnit(speed);
-    }
-    if (length) {
-      setLengthUnit(length);
-    }
-    if (clock) {
-      setClockTime(clock);
-    }
-    if (screensaverEnabledVal !== null) {
-      setScreensaverEnabled(screensaverEnabledVal === 'true');
-    }
-    if (screensaverTimeoutVal) {
-      setScreensaverTimeout(parseInt(screensaverTimeoutVal));
-    }
-    if (screensaverDurationVal) {
-      setScreensaverDuration(parseInt(screensaverDurationVal));
-    }
-    if (screensaverTypeVal) {
-      setScreensaverType(screensaverTypeVal);
-    }
   }
 
   /**
@@ -620,37 +550,6 @@ export function AppContextProvider({ children }) {
     setSettingsMenuOpen(!settingsMenuOpen);
   }
 
-  /**
-   * Save screensaver enabled state
-   */
-  function saveScreensaverEnabled(value) {
-    setScreensaverEnabled(value);
-    window.localStorage.setItem(SCREENSAVER_ENABLED_KEY, value.toString());
-  }
-
-  /**
-   * Save screensaver timeout
-   */
-  function saveScreensaverTimeout(value) {
-    setScreensaverTimeout(value);
-    window.localStorage.setItem(SCREENSAVER_TIMEOUT_KEY, value.toString());
-  }
-
-  /**
-   * Save screensaver duration
-   */
-  function saveScreensaverDuration(value) {
-    setScreensaverDuration(value);
-    window.localStorage.setItem(SCREENSAVER_DURATION_KEY, value.toString());
-  }
-
-  /**
-   * Save screensaver type
-   */
-  function saveScreensaverType(value) {
-    setScreensaverType(value);
-    window.localStorage.setItem(SCREENSAVER_TYPE_KEY, value);
-  }
 
   /**
    * Activate screensaver
@@ -750,11 +649,8 @@ export function AppContextProvider({ children }) {
     markerIsVisible,
     toggleMarker,
     tempUnit,
-    saveTempUnit,
     speedUnit,
-    saveSpeedUnit,
     lengthUnit,
-    saveLengthUnit,
     animateWeatherMap,
     toggleAnimateWeatherMap,
     settingsMenuOpen,
@@ -765,7 +661,6 @@ export function AppContextProvider({ children }) {
     customLon,
     loadStoredData,
     clockTime,
-    saveClockTime,
     saveSettingsToJson,
     updateCurrentWeatherData,
     updateDailyWeatherData,
@@ -790,10 +685,6 @@ export function AppContextProvider({ children }) {
     screensaverDuration,
     screensaverType,
     lastActivityTime,
-    saveScreensaverEnabled,
-    saveScreensaverTimeout,
-    saveScreensaverDuration,
-    saveScreensaverType,
     activateScreensaver,
     deactivateScreensaver,
     recordActivity,
