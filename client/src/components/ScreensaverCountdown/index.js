@@ -11,7 +11,8 @@ const ScreensaverCountdown = () => {
   const { 
     screensaverEnabled, 
     screensaverActive, 
-    getTimeUntilScreensaver 
+    getTimeUntilScreensaver,
+    toggleScreensaver
   } = useContext(AppContext);
   const [timeUntilScreensaver, setTimeUntilScreensaver] = useState(0);
 
@@ -42,15 +43,17 @@ const ScreensaverCountdown = () => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  // Don't show if screensaver is disabled or active
-  if (!screensaverEnabled || screensaverActive) {
+  // Don't show if screensaver is active
+  if (screensaverActive) {
     return null;
   }
 
   return (
-    <div className={styles.countdown}>
-      <div className={styles.label}>Screensaver in:</div>
-      <div className={styles.time}>{formatTime(timeUntilScreensaver)}</div>
+    <div className={styles.countdown} onClick={toggleScreensaver}>
+      <div className={styles.label}>Screensaver</div>
+      <div className={styles.time}>
+        {screensaverEnabled ? formatTime(timeUntilScreensaver) : "OFF"}
+      </div>
     </div>
   );
 };

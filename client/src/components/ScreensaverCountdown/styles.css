@@ -11,7 +11,19 @@
   backdrop-filter: blur(3px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   z-index: 1000;
-  width: 95px;
+  width: 75px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.countdown:hover {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transform: scale(1.02);
+}
+
+.countdown:active {
+  transform: scale(0.98);
 }
 
 .label {

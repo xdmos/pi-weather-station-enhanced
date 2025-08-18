@@ -48,7 +48,7 @@ export function AppContextProvider({ children }) {
   const [sunriseTime, setSunriseTime] = useState(null);
   const [sunsetTime, setSunsetTime] = useState(null);
   const [screensaverActive, setScreensaverActive] = useState(false);
-  const [screensaverEnabled] = useState(true); // Fixed: always enabled
+  const [screensaverEnabled, setScreensaverEnabled] = useState(true); // Can be toggled by user
   const [screensaverTimeout] = useState(60); // Fixed: 1 hour timeout
   const [screensaverDuration] = useState(2); // Fixed: 2 minutes duration
   const [screensaverType] = useState("images"); // Fixed: images type
@@ -552,6 +552,13 @@ export function AppContextProvider({ children }) {
 
 
   /**
+   * Toggle screensaver enabled state
+   */
+  function toggleScreensaver() {
+    setScreensaverEnabled(!screensaverEnabled);
+  }
+
+  /**
    * Activate screensaver
    */
   function activateScreensaver() {
@@ -685,6 +692,7 @@ export function AppContextProvider({ children }) {
     screensaverDuration,
     screensaverType,
     lastActivityTime,
+    toggleScreensaver,
     activateScreensaver,
     deactivateScreensaver,
     recordActivity,

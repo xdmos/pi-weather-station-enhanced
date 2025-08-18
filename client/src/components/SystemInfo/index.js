@@ -36,6 +36,13 @@ const SystemInfo = () => {
     return `${temp.toFixed(1)}°C`;
   };
 
+  const getTempColorClass = (temp) => {
+    if (temp === null || temp === undefined) return "";
+    if (temp <= 60) return styles.tempNormal;
+    if (temp <= 70) return styles.tempWarning;
+    return styles.tempDanger;
+  };
+
   const formatFanSpeed = (speed) => {
     if (speed === null || speed === undefined) return "--";
     // If speed is less than 100, it's probably a percentage
@@ -50,7 +57,9 @@ const SystemInfo = () => {
     <div className={styles.systemInfoContainer}>
       <div className={styles.systemInfoBox}>
         <div className={styles.systemInfoLabel}>CPU Temp:</div>
-        <div className={styles.systemInfoValue}>{formatTemp(cpuTemp)}</div>
+        <div className={`${styles.systemInfoValue} ${getTempColorClass(cpuTemp)}`}>
+          {formatTemp(cpuTemp)}
+        </div>
       </div>
       <div className={styles.systemInfoBox}>
         <div className={styles.systemInfoLabel}>Fan:</div>

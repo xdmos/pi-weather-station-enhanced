@@ -160,7 +160,7 @@
 
 .stat-value {
   font-size: 12px;
-  font-weight: 400;
+  font-weight: bold;
   text-align: center;
   word-break: break-word;
 }
