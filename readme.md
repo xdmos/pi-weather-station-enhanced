@@ -15,13 +15,12 @@ Sunrise and Sunset times are provided by [Sunrise-Sunset](https://sunrise-sunset
 
 # Enhanced Features
 
-- **Free Weather API**: Now uses Open-Meteo API (free, no key required) instead of paid services
-- **Automatic Dark Mode**: Switches between light/dark themes based on sunrise/sunset times
-- **System Monitoring**: Real-time CPU temperature and fan speed monitoring
-- **Screensaver Protection**: Prevents pixel burn-in with configurable timeout and content types
-- **4-Day Forecast**: Shows next 4 days excluding current day for future-focused planning
-- **Improved Performance**: Optimized data fetching and reduced API calls
-- **Enhanced UI**: Better responsive design and touch interactions
+- **Free Weather API**: Open-Meteo API (no key required) with RainViewer radar overlay
+- **Touch-Optimized Interface**: Simplified design for 5" 800x600 touchscreens  
+- **System Monitoring**: CPU temperature monitoring with color-coded alerts
+- **Automatic Dark Mode**: Switches based on sunrise/sunset times
+- **Interactive Screensaver**: One-click toggle with burn-in protection
+- **4-Day Forecast**: Future-focused weather planning
 
 # Setup
 
@@ -37,35 +36,40 @@ Start the server with
 
 Now set point your browser to `http://localhost:8080` and put it in full screen mode (`F11` in Chromium).
 
-Alternatively, you can launch Chromium directly in fullscreen kiosk mode from terminal:
+For optimal experience on Raspberry Pi touchscreens, launch Chromium in kiosk mode:
 
-    $ chromium-browser --start-fullscreen --kiosk http://localhost:8080
+    $ DISPLAY=:0 chromium-browser --start-fullscreen --kiosk http://localhost:8080
 
-## Access from another machine
+## Production Setup (Raspberry Pi)
 
-It's possible to access the app from another machine, but beware that by doing so you'll be exposing the app to your entire network, and someone else could potentially access the app and retreive your API keys from the settings page. By default the app is only accessible to `localhost`, but if you would like to open it up to your network (at your own risk!), open `/server/index.js` and remove `"localhost"` from the line that contains:
+For automatic startup on boot, use the included systemd services:
 
-```js
-app.listen(PORT, "localhost", async () => {
-```
+    $ sudo cp pi-weather-station.service /etc/systemd/system/
+    $ sudo cp pi-weather-kiosk.service /etc/systemd/system/
+    $ sudo systemctl daemon-reload
+    $ sudo systemctl enable pi-weather-station.service
+    $ sudo systemctl enable pi-weather-kiosk.service
 
-so that it becomes:
+**For development**, disable auto-restart services:
 
-```js
-app.listen(PORT, async () => {
-```
-
-The server will now serve the app across your network.
+    $ sudo systemctl stop pi-weather-station.service pi-weather-kiosk.service
+    $ sudo systemctl disable pi-weather-station.service pi-weather-kiosk.service
 
 # Settings
 
-- Your API keys are saved locally (in plain text) to `settings.json`.
-- The server will attempt to get your default location, but if it cannot or you wish to choose a different default location, enter the latitude and longitude under `Custom Latitude` and `Custom Longitude` in settings, which can be accessed by tapping the gear button in the lower right hand corner.
-- To hide the mouse cursor when using a touch screen, set `Hide Mouse` to `On`.
+- **API Keys**: Mapbox token required for maps, LocationIQ token optional for location names
+- **Custom Location**: Set latitude/longitude if auto-detection fails
+- **Hide Mouse**: Toggle cursor visibility for touchscreens
+- **Simplified Interface**: Fixed units (°C, m/s, mm, 24h) and screensaver settings (1hr/2min)
+- Access via gear button (⚙️) in top-right corner
 
-# Do you want to Host this Application in Docker?
+# Recent Updates (August 2025)
 
-Pi Weather Station is available as a Docker Image for AMD64 and ARM infrastructures. see the *ReadME* here for more: https://github.com/SeanRiggs/pi-weather-station/blob/master/Docker%20Image/Docker-ReadMe.md
+- **Simplified Interface**: Removed unit toggles and complex screensaver options
+- **Interactive Controls**: Clickable screensaver toggle showing countdown or "OFF"  
+- **CPU Temperature Alerts**: Color-coded monitoring (white/yellow/red)
+- **Touch Optimizations**: Larger buttons, better spacing, enhanced readability
+- **Fixed Parameters**: Standardized units and screensaver timing for consistency
 
 # License
 
