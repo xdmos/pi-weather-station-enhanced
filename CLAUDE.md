@@ -76,6 +76,10 @@ All application state flows through AppContext with specific update functions fo
   - Yellow color for warning temperatures (60-70°C)
   - Red color for danger temperatures (> 70°C)
   - Updates every 5 seconds with real-time system data
+- **Radar Animation Removal**: Simplified weather map functionality
+  - Removed play/stop animation controls for radar overlay
+  - Map displays current precipitation data only (no historical animation)
+  - Eliminates complex timestamp cycling and improves performance
 
 ## Common Commands
 
@@ -340,3 +344,13 @@ sudo systemctl start pi-weather-station.service pi-weather-kiosk.service
 ```bash
 DISPLAY=:0 chromium-browser --start-fullscreen --kiosk http://localhost:8080 &
 ```
+
+## Latest Changes (August 19, 2025)
+- **Radar Animation Removed**: Completely removed weather radar animation functionality from WeatherMap component
+- **Mouse Control Relocated**: Moved mouse cursor toggle from Settings menu to TopControlButtons (third button)
+- **Button Design**: Mouse toggle shows "ON"/"OFF" text labels with bold font (weight: 900, 12px) instead of icons
+- **Code Cleanup**: Removed animateWeatherMap state, toggleAnimateWeatherMap function, and related animation logic
+- **Settings Simplified**: Removed Hide Mouse toggle button from Settings menu interface
+- **CSS Enhancement**: Improved mouse cursor hiding with .hideMouse class affecting all child elements
+- **Performance Improvement**: Eliminated complex timestamp cycling and reduced API calls
+- **UI Consistency**: All control buttons maintain consistent styling without color changes on toggle
