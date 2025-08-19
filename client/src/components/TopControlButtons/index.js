@@ -7,8 +7,6 @@ import contrastIcon from "@iconify/icons-carbon/contrast";
 import sharpSettings from "@iconify/icons-ic/sharp-settings";
 import roundLocationOn from "@iconify/icons-ic/round-location-on";
 import roundLocationOff from "@iconify/icons-ic/round-location-off";
-import playFilledAlt from "@iconify/icons-carbon/play-filled-alt";
-import stopFilledAlt from "@iconify/icons-carbon/stop-filled-alt";
 
 /**
  * Top control buttons component
@@ -23,11 +21,15 @@ const TopControlButtons = () => {
     resetMapPosition,
     markerIsVisible,
     toggleMarker,
-    toggleAnimateWeatherMap,
-    animateWeatherMap,
     toggleSettingsMenuOpen,
     settingsMenuOpen,
+    mouseHide,
+    saveMouseHide,
   } = useContext(AppContext);
+
+  const toggleMouseVisibility = () => {
+    saveMouseHide(!mouseHide);
+  };
 
   return (
     <div className={styles.topControlContainer}>
@@ -48,11 +50,13 @@ const TopControlButtons = () => {
         />
       </div>
       <div
-        className={`${styles.controlButton} ${darkMode ? styles.dark : styles.light} ${animateWeatherMap ? styles.active : ""}`}
-        onClick={toggleAnimateWeatherMap}
-        title={animateWeatherMap ? "Stop animation" : "Start animation"}
+        className={`${styles.controlButton} ${darkMode ? styles.dark : styles.light}`}
+        onClick={toggleMouseVisibility}
+        title={mouseHide ? "Show mouse cursor" : "Hide mouse cursor"}
       >
-        <InlineIcon icon={animateWeatherMap ? stopFilledAlt : playFilledAlt} />
+        <span style={{fontSize: '12px', fontWeight: '900'}}>
+          {mouseHide ? "OFF" : "ON"}
+        </span>
       </div>
       <div 
         className={`${styles.controlButton} ${darkMode ? styles.dark : styles.light} ${autoDarkMode ? styles.autoMode : ""}`}

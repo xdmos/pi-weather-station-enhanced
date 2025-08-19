@@ -31,7 +31,6 @@ const WeatherMap = ({ zoom, dark }) => {
     mapApiKey,
     getMapApiKey,
     markerIsVisible,
-    animateWeatherMap,
   } = useContext(AppContext);
   const mapRef = useRef();
 
@@ -45,10 +44,8 @@ const WeatherMap = ({ zoom, dark }) => {
   );
 
   const [mapTimestamps, setMapTimestamps] = useState(null);
-  const [currentMapTimestampIdx, setCurrentMapTimestampIdx] = useState(0);
 
   const MAP_TIMESTAMP_REFRESH_FREQUENCY = 1000 * 60 * 3; //update every 3 minutes
-  const MAP_CYCLE_RATE = 1000; //ms
 
   const getMapApiKeyCallback = useCallback(() => getMapApiKey(), [
     getMapApiKey,
@@ -99,28 +96,6 @@ const WeatherMap = ({ zoom, dark }) => {
     }
   }, [mapTimestamps]);
 
-  // cycle through weather maps when animated is enabled
-  useEffect(() => {
-    if (mapTimestamps && mapTimestamps.length > 0) {
-      if (animateWeatherMap) {
-        const interval = setInterval(() => {
-          let nextIdx;
-          if (currentMapTimestampIdx + 1 >= mapTimestamps.length) {
-            nextIdx = 0;
-          } else {
-            nextIdx = currentMapTimestampIdx + 1;
-          }
-          setCurrentMapTimestampIdx(nextIdx);
-        }, MAP_CYCLE_RATE);
-        return () => {
-          clearInterval(interval);
-        };
-      } else {
-        // Always show the latest radar data
-        setCurrentMapTimestampIdx(mapTimestamps.length - 1);
-      }
-    }
-  }, [currentMapTimestampIdx, animateWeatherMap, mapTimestamps]);
 
   if (!hasVal(latitude) || !hasVal(longitude) || !zoom || !mapApiKey) {
     return (
@@ -154,13 +129,9 @@ const WeatherMap = ({ zoom, dark }) => {
       />
       {mapTimestamps && mapTimestamps.length > 0 ? (
         <TileLayer
-          key={animateWeatherMap ? currentMapTimestampIdx : mapTimestamps.length - 1}
+          key={mapTimestamps.length - 1}
           attribution='<a href="https://www.rainviewer.com/">RainViewer</a>'
-          url={`https://tilecache.rainviewer.com/v2/radar/${
-            animateWeatherMap 
-              ? mapTimestamps[currentMapTimestampIdx] 
-              : mapTimestamps[mapTimestamps.length - 1]
-          }/512/{z}/{x}/{y}/6/1_1.png`}
+          url={`https://tilecache.rainviewer.com/v2/radar/${mapTimestamps[mapTimestamps.length - 1]}/512/{z}/{x}/{y}/6/1_1.png`}
           opacity={0.7}
         />
       ) : null}

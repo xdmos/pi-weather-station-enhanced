@@ -51,12 +51,13 @@ All application state flows through AppContext with specific update functions fo
 **Settings Menu Improvements**:
 - **Larger title**: "SETTINGS" increased from 12px to 24px font
 - **Touch-friendly close button**: X button enlarged to 32px with 48x48px touch area
-- **Reorganized layout**: API keys section moved to top, HIDE MOUSE and SAVE moved to bottom
+- **Reorganized layout**: API keys section moved to top, SAVE button moved to bottom
 - **Compact window**: Width reduced to 380px for optimal space utilization
 - **Theme-aware styling**: Solid backgrounds and button colors adapt to light/dark modes
   - Light mode: Light gray background (#e8e8e8) with bright buttons
   - Dark mode: Dark gray background (#2c2c2c) with traditional dark buttons
 - **Non-transparent design**: Removed blur effects and transparency for cleaner appearance
+- **Mouse Control Removed**: HIDE MOUSE option removed from settings menu (moved to top control buttons)
 
 **Interface Optimizations**:
 - **Screensaver Control**: Converted countdown timer to interactive toggle button
@@ -133,12 +134,14 @@ Touch-optimized dark/light mode system with three-state cycling:
 - Webpack configured for production builds with code splitting
 
 ### Map Integration
-Weather radar integration uses RainViewer's tile API with timestamp-based URLs. Radar animation cycles through available timestamps when enabled. Map click events update location and trigger weather data refresh.
+Weather radar integration uses RainViewer's tile API with timestamp-based URLs. Map displays current precipitation radar data only. Map click events update location and trigger weather data refresh.
 
 **Map Display Optimizations:**
 - **Clean Interface**: All map attribution and watermarks hidden for professional appearance
 - **Full Screen Usage**: Removed Leaflet/Mapbox attribution controls to maximize map area
 - **Touch-Optimized**: Map interactions optimized for touchscreen navigation
+- **Current Data Only**: Radar animation functionality removed - map shows only current/latest radar data
+- **Static Radar Display**: No animation cycling through historical timestamps
 
 ## Screensaver Feature
 
@@ -202,6 +205,11 @@ Located in Settings menu under "SCREENSAVER" section:
 - **Auto Mode Indicator**: Red border clearly identifies automatic theme mode
 - **Improved Panel Layout**: Increased spacing between sunrise/sunset and location sections
 - **Optimized Grid Structure**: Removed obsolete controls area to maximize content space
+- **Mouse Toggle Control**: Third button now controls mouse cursor visibility
+  - Shows "ON" when mouse cursor is visible
+  - Shows "OFF" when mouse cursor is hidden
+  - Extra bold font (weight: 900) at 12px size for clear visibility
+  - No color change on toggle - maintains consistent appearance
 
 ## Display Optimizations
 
@@ -209,14 +217,14 @@ Located in Settings menu under "SCREENSAVER" section:
 The interface has been optimized for small touchscreens (5-7 inch):
 
 #### Settings Layout
-- **Compact Design**: All unit toggles (F/C, mph/m/s, in/mm, 12h/24h) in single row
-- **Reorganized Sections**: 
-  1. Units (top, single row)
-  2. Screensaver options
-  3. Hide Mouse + Save button
-  4. API Keys (bottom, scrollable)
-- **Scrollable Interface**: Vertical scrolling with styled scrollbar for overflow content
+- **Streamlined Design**: Removed unit toggles and screensaver options (now fixed settings)
+- **Simplified Sections**:
+  1. Location settings (custom starting coordinates)
+  2. API Keys (Mapbox required, LocationIQ optional)  
+  3. Save button
+- **Clean Interface**: Focused only on essential configuration options
 - **Responsive Elements**: Buttons and inputs sized for touch interaction
+- **Mouse Control Moved**: Hide/show mouse functionality moved to top control buttons
 
 #### Containerized Layout System
 The interface uses a modular container-based layout for optimal organization and space utilization:

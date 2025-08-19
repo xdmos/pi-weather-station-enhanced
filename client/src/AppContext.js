@@ -40,7 +40,6 @@ export function AppContextProvider({ children }) {
   const [speedUnit] = useState("ms"); // Fixed: m/s
   const [lengthUnit] = useState("mm"); // Fixed: mm
   const [clockTime] = useState("24"); // Fixed: 24h time
-  const [animateWeatherMap, setAnimateWeatherMap] = useState(false);
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false);
   const [customLat, setCustomLat] = useState(null);
   const [customLon, setCustomLon] = useState(null);
@@ -536,12 +535,6 @@ export function AppContextProvider({ children }) {
     setMarkerIsVisible(!markerIsVisible);
   }
 
-  /**
-   * Toggles weather map animation on/off
-   */
-  function toggleAnimateWeatherMap() {
-    setAnimateWeatherMap(!animateWeatherMap);
-  }
 
   /**
    * Toggles settings menu open/closed
@@ -658,8 +651,6 @@ export function AppContextProvider({ children }) {
     tempUnit,
     speedUnit,
     lengthUnit,
-    animateWeatherMap,
-    toggleAnimateWeatherMap,
     settingsMenuOpen,
     setSettingsMenuOpen,
     toggleSettingsMenuOpen,

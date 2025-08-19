@@ -23,8 +23,6 @@ const Settings = () => {
     customLat,
     customLon,
     setSettingsMenuOpen,
-    mouseHide,
-    saveMouseHide,
     darkMode,
   } = useContext(AppContext);
 
@@ -49,8 +47,6 @@ const Settings = () => {
     customLat,
     customLon,
     currentGeoKey,
-    mouseHide,
-    saveMouseHide,
   ]);
 
   useEffect(() => {
@@ -114,17 +110,6 @@ const Settings = () => {
             />
           </div>
           <div className={styles.bottomButtonContainer}>
-            <div>
-              <div className={styles.label}>HIDE MOUSE</div>
-              <ToggleButton
-                button1Label={"ON"}
-                button2Label={"OFF"}
-                val={mouseHide}
-                button1Val={true}
-                button2Val={false}
-                cb={saveMouseHide}
-              />
-            </div>
             <div className={styles.saveButtonContainer}>
               <SaveButton
                 mapsKey={mapsKey}
@@ -153,14 +138,12 @@ export default Settings;
  * @returns {JSX.Element} Save button
  */
 const SaveButton = ({ mapsKey, geoKey, lat, lon }) => {
-  const { saveSettingsToJson, setSettingsMenuOpen, mouseHide } = useContext(
+  const { saveSettingsToJson, setSettingsMenuOpen } = useContext(
     AppContext
   );
   return (
     <div
-      className={`${styles.button} ${styles.saveButton} ${
-        !mouseHide ? styles.showMouse : ""
-      }`}
+      className={`${styles.button} ${styles.saveButton}`}
       onClick={() => {
         saveSettingsToJson({ mapsKey, weatherKey: null, geoKey, lat, lon })
           .then(() => {

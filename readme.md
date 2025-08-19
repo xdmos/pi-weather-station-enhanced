@@ -7,7 +7,7 @@ This is an enhanced weather station designed to be used with a Raspberry Pi on 5
 
 The weather station uses the free [Open-Meteo](https://open-meteo.com/) API for weather data (no API key required) and optionally requires API keys from [Mapbox](https://www.mapbox.com/) for map tiles. You can also use an API key from [LocationIQ](https://locationiq.com/) to perform reverse geocoding.
 
-Weather maps are provided by the [RainViewer](https://www.rainviewer.com/) API, which generously does not require an [API key](https://www.rainviewer.com/api.html).
+Weather maps are provided by the [RainViewer](https://www.rainviewer.com/) API, which generously does not require an [API key](https://www.rainviewer.com/api.html). The map displays current precipitation radar data only (animation functionality removed for simplicity).
 
 Sunrise and Sunset times are provided by [Sunrise-Sunset](https://sunrise-sunset.org/), which generously does not require an [API key](https://sunrise-sunset.org/api).
 
@@ -54,9 +54,17 @@ For automatic startup on boot, use the included systemd services:
 
 - **API Keys**: Mapbox token required for maps, LocationIQ token optional for location names
 - **Custom Location**: Set latitude/longitude if auto-detection fails
-- **Hide Mouse**: Toggle cursor visibility for touchscreens
 - **Simplified Interface**: Fixed units (°C, m/s, mm, 24h) and screensaver settings (1hr/2min)
 - Access via gear button (⚙️) in top-right corner
+
+# Control Buttons
+
+Located in the top-left corner for easy touchscreen access:
+- **🧭 Location Reset**: Return map to current/default position
+- **📍 Marker Toggle**: Show/hide location marker on map
+- **ON/OFF Mouse**: Toggle mouse cursor visibility (replaces radar animation)
+- **🌓 Theme**: Cycle through Light → Dark → Auto modes (auto indicated by red border)
+- **⚙️ Settings**: Open configuration panel
 
 # Recent Updates (August 2025)
 
@@ -65,6 +73,8 @@ For automatic startup on boot, use the included systemd services:
 - **CPU Temperature Alerts**: Color-coded monitoring (white/yellow/red)
 - **Touch Optimizations**: Larger buttons, better spacing, enhanced readability
 - **Fixed Parameters**: Standardized units and screensaver timing for consistency
+- **Radar Simplification**: Removed animation controls - map shows current weather radar only
+- **Mouse Control**: Moved from settings to dedicated ON/OFF button in control panel
 
 # License
 
