@@ -345,7 +345,16 @@ sudo systemctl start pi-weather-station.service pi-weather-kiosk.service
 DISPLAY=:0 chromium-browser --start-fullscreen --kiosk http://localhost:8080 &
 ```
 
-## Latest Changes (August 19, 2025)
+## Latest Changes (August 22, 2025)
+- **Top Control Button Icon Improvements**: Enhanced visual feedback for control buttons with color-coded states
+  - **Mouse Cursor Toggle**: Icon changes color - black when cursor visible (ON), light gray when hidden (OFF)
+  - **Location Marker Toggle**: Uses single location icon with color coding - black when marker visible (ON), light gray when hidden (OFF)
+  - **Removed Crossed Icons**: Eliminated confusing crossed-out icons in favor of intuitive color changes
+  - **Consistent Visual Language**: Both mouse and location toggles now use same color system for better UX
+- **Code Optimization**: Removed unused import (roundLocationOff) and simplified icon logic
+- **UI Clarity**: Improved button state recognition through consistent color feedback system
+
+## Previous Changes (August 19, 2025)
 - **Radar Animation Removed**: Completely removed weather radar animation functionality from WeatherMap component
 - **Mouse Control Relocated**: Moved mouse cursor toggle from Settings menu to TopControlButtons (third button)
 - **Button Design**: Mouse toggle shows "ON"/"OFF" text labels with bold font (weight: 900, 12px) instead of icons

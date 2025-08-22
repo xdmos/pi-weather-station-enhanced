@@ -6,7 +6,7 @@ import locationArrow from "@iconify/icons-map/location-arrow";
 import contrastIcon from "@iconify/icons-carbon/contrast";
 import sharpSettings from "@iconify/icons-ic/sharp-settings";
 import roundLocationOn from "@iconify/icons-ic/round-location-on";
-import roundLocationOff from "@iconify/icons-ic/round-location-off";
+import cursorIcon from "@iconify/icons-carbon/cursor-1";
 
 /**
  * Top control buttons component
@@ -46,7 +46,8 @@ const TopControlButtons = () => {
         title={markerIsVisible ? "Hide marker" : "Show marker"}
       >
         <InlineIcon
-          icon={markerIsVisible ? roundLocationOff : roundLocationOn}
+          icon={roundLocationOn}
+          style={{ color: markerIsVisible ? '#000000' : '#cccccc' }}
         />
       </div>
       <div
@@ -54,9 +55,10 @@ const TopControlButtons = () => {
         onClick={toggleMouseVisibility}
         title={mouseHide ? "Show mouse cursor" : "Hide mouse cursor"}
       >
-        <span style={{fontSize: '12px', fontWeight: '900'}}>
-          {mouseHide ? "OFF" : "ON"}
-        </span>
+        <InlineIcon 
+          icon={cursorIcon} 
+          style={{ color: mouseHide ? '#cccccc' : '#000000' }}
+        />
       </div>
       <div 
         className={`${styles.controlButton} ${darkMode ? styles.dark : styles.light} ${autoDarkMode ? styles.autoMode : ""}`}
