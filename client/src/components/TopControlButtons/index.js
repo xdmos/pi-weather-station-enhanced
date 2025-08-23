@@ -47,7 +47,7 @@ const TopControlButtons = () => {
       >
         <InlineIcon
           icon={roundLocationOn}
-          style={{ color: markerIsVisible ? '#000000' : '#cccccc' }}
+          style={{ color: markerIsVisible ? (darkMode ? '#ffffff' : '#000000') : '#666666' }}
         />
       </div>
       <div
@@ -57,7 +57,7 @@ const TopControlButtons = () => {
       >
         <InlineIcon 
           icon={cursorIcon} 
-          style={{ color: mouseHide ? '#cccccc' : '#000000' }}
+          style={{ color: mouseHide ? '#666666' : (darkMode ? '#ffffff' : '#000000') }}
         />
       </div>
       <div 
