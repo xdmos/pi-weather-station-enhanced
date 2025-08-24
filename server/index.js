@@ -90,10 +90,23 @@ app.get("/system-info", (req, res) => {
     });
   };
 
-  Promise.all([getCpuTemp(), getFanSpeed()]).then(([cpuTemp, fanSpeed]) => {
+  const getDiskSpace = () => {
+    return new Promise((resolve) => {
+      exec("df -h / | awk 'NR==2 {print $4}'", (error, stdout) => {
+        if (error) {
+          resolve(null);
+        } else {
+          resolve(stdout.trim());
+        }
+      });
+    });
+  };
+
+  Promise.all([getCpuTemp(), getFanSpeed(), getDiskSpace()]).then(([cpuTemp, fanSpeed, diskSpace]) => {
     res.json({
       cpuTemp,
-      fanSpeed
+      fanSpeed,
+      diskSpace
     });
   });
 });

@@ -10,6 +10,7 @@ import axios from "axios";
 const SystemInfo = () => {
   const [cpuTemp, setCpuTemp] = useState(null);
   const [fanSpeed, setFanSpeed] = useState(null);
+  const [diskSpace, setDiskSpace] = useState(null);
 
   useEffect(() => {
     const fetchSystemInfo = () => {
@@ -18,6 +19,7 @@ const SystemInfo = () => {
           if (res.data) {
             setCpuTemp(res.data.cpuTemp);
             setFanSpeed(res.data.fanSpeed);
+            setDiskSpace(res.data.diskSpace);
           }
         })
         .catch((err) => {
@@ -53,6 +55,14 @@ const SystemInfo = () => {
     return `${Math.round(speed)} RPM`;
   };
 
+  const formatDiskSpace = (space) => {
+    if (space === null || space === undefined) return "--";
+    // Remove existing G/M/T and add proper spacing with B
+    const cleanSpace = space.replace(/[GMT]$/, '');
+    const unit = space.slice(-1); // Get last character (G, M, or T)
+    return cleanSpace + " " + unit + "B";
+  };
+
   return (
     <div className={styles.systemInfoContainer}>
       <div className={styles.systemInfoBox}>
@@ -64,6 +74,10 @@ const SystemInfo = () => {
       <div className={styles.systemInfoBox}>
         <div className={styles.systemInfoLabel}>Fan:</div>
         <div className={styles.systemInfoValue}>{formatFanSpeed(fanSpeed)}</div>
+      </div>
+      <div className={styles.systemInfoBox}>
+        <div className={styles.systemInfoLabel}>SSD Free:</div>
+        <div className={styles.systemInfoValue}>{formatDiskSpace(diskSpace)}</div>
       </div>
     </div>
   );

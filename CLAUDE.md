@@ -29,7 +29,7 @@ Pi Weather Station is a React-based weather application designed for Raspberry P
 - **Reverse Geocoding**: LocationIQ API (optional) for location names
 - **Sunrise/Sunset**: Sunrise-Sunset.org API (free, no key required)
 - **Screensaver Images**: Lorem Picsum API (free, no key required) for high-quality random images
-- **System Monitoring**: `/system-info` endpoint provides CPU temperature and fan speed data
+- **System Monitoring**: `/system-info` endpoint provides CPU temperature, fan speed, and SSD free space data
 
 ### State Management Pattern
 All application state flows through AppContext with specific update functions for each data type. Weather data updates automatically on intervals (current: 3min, hourly: 1hr, daily: 24hr). Screensaver state includes activity tracking, timeout management, and countdown timers.
@@ -196,11 +196,15 @@ Located in Settings menu under "SCREENSAVER" section:
 - Automatically hides when screensaver is disabled or not applicable
 
 ### System Monitoring Display
-- **CPU Temperature**: Shows real-time CPU temperature in Celsius
+- **CPU Temperature**: Shows real-time CPU temperature in Celsius with color coding
+  - White for normal (≤60°C), Yellow for warning (60-70°C), Red for danger (>70°C)
 - **Fan Speed**: Displays fan speed as percentage or RPM (depending on available sensors)
-- **Bottom Bar Layout**: Screensaver countdown (left), CPU temp (center-left), Fan speed (center-right)
+- **SSD Free Space**: Shows available disk space on root filesystem with proper formatting
+  - Formats units like "196 GB", "2.1 TB" with consistent spacing
+  - Uses `df -h /` command for accurate real-time disk usage monitoring
+- **Bottom Bar Layout**: Screensaver countdown (left), CPU temp, Fan speed, SSD free space (right)
 - Updates every 5 seconds for current system status
-- Compact design optimized for small displays
+- Compact design optimized for small displays with three system info tiles
 
 ### Touch Interface Optimization
 - **Relocated Control Buttons**: Moved from bottom-right to top-left for better accessibility
@@ -396,6 +400,15 @@ DISPLAY=:0 chromium-browser --start-fullscreen --kiosk http://localhost:8080 &
 - **Text Shadow Optimization**: Added strong text shadows for all overlay elements
   - Light backgrounds: `rgba(255, 255, 255, 0.8)` shadows
   - Dark backgrounds: `rgba(0, 0, 0, 0.9)` shadows for maximum contrast
+
+### System Monitoring Enhancements
+- **SSD Space Monitoring**: Added third system info tile displaying available disk space
+  - Real-time monitoring of root filesystem free space using `df -h /` command
+  - Displays format like "196 GB" with proper spacing and unit formatting
+  - Updates every 5 seconds alongside CPU temperature and fan speed
+  - Positioned as third tile in bottom-left system info panel
+  - Backend integration in `/system-info` endpoint with `getDiskSpace()` function
+  - Frontend processing removes duplicate units and adds proper "GB/MB/TB" formatting
 
 ### Stability and Reliability Improvements
 - **Systemd Service Optimization**: Both weather station and kiosk services now operate without conflicts
