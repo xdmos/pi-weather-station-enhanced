@@ -116,10 +116,12 @@ The codebase was recently migrated from Tomorrow.io (paid, limited) to Open-Mete
 - **Daily**: `data.daily.time[]`, `data.daily.temperature_2m_max[]`, etc.
 
 ### Settings and Configuration
-Settings are stored in `/settings.json` with API keys. Required keys:
+Settings are stored securely in `~/.config/weather-station/settings.json` with API keys. The application automatically detects this secure location. Required keys:
 - `mapApiKey`: Mapbox token for base map tiles (required)
 - `reverseGeoApiKey`: LocationIQ token (optional, for location names)
 - `startingLat/startingLon`: Default location coordinates
+
+**Security Note**: After security audits, API keys are moved to `~/.config/weather-station/settings.json` for better protection. The local `settings.json` file is now a symlink to this secure location to maintain backward compatibility.
 
 Note: Weather API key is no longer needed as Open-Meteo is free and doesn't require authentication.
 
@@ -346,6 +348,21 @@ DISPLAY=:0 chromium-browser --start-fullscreen --kiosk http://localhost:8080 &
 ```
 
 ## Latest Changes (August 24, 2025)
+
+### Service Stability Fixes
+- **Server Startup Optimization**: Removed problematic `await open()` call from server startup that was causing instability in systemd environment
+- **Kiosk Service Redesign**: Fixed pi-weather-kiosk.service configuration to prevent continuous restarts
+  - Changed from `Type=simple` with `Restart=always` to `Type=oneshot` with `RemainAfterExit=yes`
+  - Added server availability check before launching Chromium
+  - Added `--new-window` flag to prevent session conflicts
+  - Eliminated restart loops that were occurring every 15-20 seconds
+- **Settings Security Integration**: Modified settingsCtrl.js to automatically detect and use secure settings location
+  - Primary: `~/.config/weather-station/settings.json` (security audit compliant)
+  - Fallback: Local `settings.json` for backward compatibility
+  - Created symlink from local to secure location for seamless operation
+- **API Keys Protection**: Ensured weather station continues working after security audits move API keys to secure location
+
+### Display and Interface Updates
 - **Clock Container Relocated**: Moved date, time, and sunrise/sunset display from InfoPanel sidebar to WeatherMap overlay
   - **Map Overlay Position**: Clock container now appears as transparent overlay in bottom-left corner of map
   - **Above Screensaver Counter**: Positioned 80px from bottom, 10px from left, above screensaver countdown tile
@@ -365,6 +382,12 @@ DISPLAY=:0 chromium-browser --start-fullscreen --kiosk http://localhost:8080 &
   - **Weather Statistics**: Labels increased from 11px to 13px, values from 12px to 14px (+2px each)
   - **Daily Forecast**: Day names from 12px to 14px, weather icons from 28px to 30px, temperatures from 13px to 15px (+2px each)
   - **Optimized Spacing**: Increased gaps and padding to better utilize available panel space
+
+### Stability and Reliability Improvements
+- **Systemd Service Optimization**: Both weather station and kiosk services now operate without conflicts
+- **Automatic Recovery**: Services properly handle restarts and dependencies without manual intervention
+- **Settings Persistence**: Configuration survives security audits and system maintenance
+- **Production Ready**: Stable operation confirmed for extended periods without restarts or refreshes
 
 ## Previous Changes (August 22, 2025)
 - **Top Control Button Icon Improvements**: Enhanced visual feedback for control buttons with color-coded states

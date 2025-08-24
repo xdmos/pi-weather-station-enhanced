@@ -1,8 +1,14 @@
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 
-const SETTINGS_FILE = "../settings.json";
-const FILE_PATH = path.join(`${__dirname}/${SETTINGS_FILE}`);
+// Use secure location for settings, fallback to local file
+const SECURE_SETTINGS_DIR = path.join(os.homedir(), ".config", "weather-station");
+const SECURE_SETTINGS_FILE = path.join(SECURE_SETTINGS_DIR, "settings.json");
+const LOCAL_SETTINGS_FILE = path.join(`${__dirname}`, "../settings.json");
+
+// Check which settings file to use
+const FILE_PATH = fs.existsSync(SECURE_SETTINGS_FILE) ? SECURE_SETTINGS_FILE : LOCAL_SETTINGS_FILE;
 const ENCODING = "utf8";
 
 /**
