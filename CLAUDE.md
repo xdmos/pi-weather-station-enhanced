@@ -353,11 +353,18 @@ DISPLAY=:0 chromium-browser --start-fullscreen --kiosk http://localhost:8080 &
   - **Custom Font Sizes**: 
     - Date: 24px bold ("SUNDAY AUGUST 24")
     - Time: 42px bold ("19:20")
-    - Sunrise/Sunset: 20px bold ("☀ 05:58  🌙 20:05")
+    - Sunrise/Sunset: 20px bold ("☀ 05:58  ● 20:05")
   - **Transparent Design**: No background, borders, or visual interference with map
   - **Direct Implementation**: Sunrise/sunset rendered directly with emoji icons instead of SunRiseSet component
 - **InfoPanel Streamlining**: Removed Clock component import and headerContainer from sidebar panel
 - **CSS Cleanup**: Eliminated conflicting CSS Module styles that were overriding inline font specifications
+- **Right Panel Font Enhancements**: Significantly enlarged all text elements in sidebar for better readability
+  - **Weather Icon**: Increased from 50px to 80px (60% larger)
+  - **Main Temperature**: Increased from 48px to 64px (33% larger) 
+  - **Temperature Details**: All related elements scaled proportionally (degrees, slash, apparent temp)
+  - **Weather Statistics**: Labels increased from 11px to 13px, values from 12px to 14px (+2px each)
+  - **Daily Forecast**: Day names from 12px to 14px, weather icons from 28px to 30px, temperatures from 13px to 15px (+2px each)
+  - **Optimized Spacing**: Increased gaps and padding to better utilize available panel space
 
 ## Previous Changes (August 22, 2025)
 - **Top Control Button Icon Improvements**: Enhanced visual feedback for control buttons with color-coded states
