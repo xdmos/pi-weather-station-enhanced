@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import { AppContext } from "~/AppContext";
 import debounce from "debounce";
 import axios from "axios";
+import { format } from "date-fns";
 import styles from "./styles.css";
 
 /**
@@ -31,6 +32,8 @@ const WeatherMap = ({ zoom, dark }) => {
     mapApiKey,
     getMapApiKey,
     markerIsVisible,
+    sunriseTime,
+    sunsetTime,
   } = useContext(AppContext);
   const mapRef = useRef();
 
@@ -108,37 +111,58 @@ const WeatherMap = ({ zoom, dark }) => {
   const markerPosition = mapGeo ? [mapGeo.latitude, mapGeo.longitude] : null;
 
   return (
-    <Map
-      ref={mapRef}
-      center={[latitude, longitude]}
-      zoom={zoom}
-      style={{ width: "100%", height: "100%" }}
-      attributionControl={false}
-      touchZoom={true}
-      dragging={true}
-      fadeAnimation={false}
-      onClick={mapClickHandler}
-    >
-      <AttributionControl position={"bottomleft"} />
-      <TileLayer
-        attribution='© <a href="https://www.mapbox.com/feedback/">Mapbox</a>'
-        url={`https://api.mapbox.com/styles/v1/mapbox/${
-          dark ? "dark-v10" : "light-v10"
-        }/tiles/{z}/{x}/{y}?access_token={apiKey}`}
-        apiKey={mapApiKey}
-      />
-      {mapTimestamps && mapTimestamps.length > 0 ? (
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      <Map
+        ref={mapRef}
+        center={[latitude, longitude]}
+        zoom={zoom}
+        style={{ width: "100%", height: "100%" }}
+        attributionControl={false}
+        touchZoom={true}
+        dragging={true}
+        fadeAnimation={false}
+        onClick={mapClickHandler}
+      >
+        <AttributionControl position={"bottomleft"} />
         <TileLayer
-          key={mapTimestamps.length - 1}
-          attribution='<a href="https://www.rainviewer.com/">RainViewer</a>'
-          url={`https://tilecache.rainviewer.com/v2/radar/${mapTimestamps[mapTimestamps.length - 1]}/512/{z}/{x}/{y}/6/1_1.png`}
-          opacity={0.7}
+          attribution='© <a href="https://www.mapbox.com/feedback/">Mapbox</a>'
+          url={`https://api.mapbox.com/styles/v1/mapbox/${
+            dark ? "dark-v10" : "light-v10"
+          }/tiles/{z}/{x}/{y}?access_token={apiKey}`}
+          apiKey={mapApiKey}
         />
-      ) : null}
-      {markerIsVisible && markerPosition ? (
-        <Marker position={markerPosition} opacity={0.65}></Marker>
-      ) : null}
-    </Map>
+        {mapTimestamps && mapTimestamps.length > 0 ? (
+          <TileLayer
+            key={mapTimestamps.length - 1}
+            attribution='<a href="https://www.rainviewer.com/">RainViewer</a>'
+            url={`https://tilecache.rainviewer.com/v2/radar/${mapTimestamps[mapTimestamps.length - 1]}/512/{z}/{x}/{y}/6/1_1.png`}
+            opacity={0.7}
+          />
+        ) : null}
+        {markerIsVisible && markerPosition ? (
+          <Marker position={markerPosition} opacity={0.65}></Marker>
+        ) : null}
+      </Map>
+      
+      {/* Date, time, sunrise/sunset overlay in bottom left */}
+      <div className={styles.clockOverlay}>
+        <div style={{fontSize: '24px', fontWeight: 'bold', display: 'flex', justifyContent: 'center', color: '#666', marginBottom: '3px'}}>
+          {format(new Date(), "cccc").toUpperCase()}{" "}
+          {format(new Date(), "LLLL").toUpperCase()} {format(new Date(), "d")}
+        </div>
+        <div style={{fontSize: '42px', fontWeight: 'bold', display: 'flex', justifyContent: 'center', color: '#333'}}>
+          {format(new Date(), "HH:mm")}
+        </div>
+        <div style={{fontSize: '20px', fontWeight: 'bold', display: 'flex', justifyContent: 'center', marginTop: '4px', color: '#777', gap: '12px'}}>
+          <div style={{fontSize: '20px', fontWeight: 'bold'}}>
+            ☀ {sunriseTime ? format(new Date(sunriseTime), "HH:mm") : ""}
+          </div>
+          <div style={{fontSize: '20px', fontWeight: 'bold'}}>
+            ● {sunsetTime ? format(new Date(sunsetTime), "HH:mm") : ""}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

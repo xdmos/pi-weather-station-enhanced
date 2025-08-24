@@ -345,7 +345,21 @@ sudo systemctl start pi-weather-station.service pi-weather-kiosk.service
 DISPLAY=:0 chromium-browser --start-fullscreen --kiosk http://localhost:8080 &
 ```
 
-## Latest Changes (August 22, 2025)
+## Latest Changes (August 24, 2025)
+- **Clock Container Relocated**: Moved date, time, and sunrise/sunset display from InfoPanel sidebar to WeatherMap overlay
+  - **Map Overlay Position**: Clock container now appears as transparent overlay in bottom-left corner of map
+  - **Above Screensaver Counter**: Positioned 80px from bottom, 10px from left, above screensaver countdown tile
+  - **Inline Styling**: Uses direct inline styles instead of CSS Modules to ensure proper font sizing
+  - **Custom Font Sizes**: 
+    - Date: 24px bold ("SUNDAY AUGUST 24")
+    - Time: 42px bold ("19:20")
+    - Sunrise/Sunset: 20px bold ("☀ 05:58  🌙 20:05")
+  - **Transparent Design**: No background, borders, or visual interference with map
+  - **Direct Implementation**: Sunrise/sunset rendered directly with emoji icons instead of SunRiseSet component
+- **InfoPanel Streamlining**: Removed Clock component import and headerContainer from sidebar panel
+- **CSS Cleanup**: Eliminated conflicting CSS Module styles that were overriding inline font specifications
+
+## Previous Changes (August 22, 2025)
 - **Top Control Button Icon Improvements**: Enhanced visual feedback for control buttons with color-coded states
   - **Mouse Cursor Toggle**: Icon changes color - black when cursor visible (ON), light gray when hidden (OFF)
   - **Location Marker Toggle**: Uses single location icon with color coding - black when marker visible (ON), light gray when hidden (OFF)

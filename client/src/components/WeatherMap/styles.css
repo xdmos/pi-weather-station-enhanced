@@ -16,3 +16,14 @@
 .light {
   color: #3a393888;
 }
+
+.clockOverlay {
+  position: absolute;
+  bottom: 80px;
+  left: 10px;
+  z-index: 1000;
+  pointer-events: none;
+  background: transparent;
+  border: none;
+}
+
