@@ -383,6 +383,20 @@ DISPLAY=:0 chromium-browser --start-fullscreen --kiosk http://localhost:8080 &
   - **Daily Forecast**: Day names from 12px to 14px, weather icons from 28px to 30px, temperatures from 13px to 15px (+2px each)
   - **Optimized Spacing**: Increased gaps and padding to better utilize available panel space
 
+### Dark Mode Visibility Enhancements
+- **Location Text Contrast**: Enhanced LocationName component with proper dark mode support
+  - Light mode: Dark text (#333) with light text-shadow
+  - Dark mode: White text (#ffffff) with strong black text-shadow for map overlay visibility
+  - Uses `:global(.dark)` CSS modules selector for reliable theme detection
+- **Clock Overlay Improvements**: Redesigned date/time/sunrise/sunset display on map overlay
+  - Replaced inline styles with proper CSS classes for maintainability
+  - Light mode: Subtle gray colors (#666, #333, #777) with white shadows
+  - Dark mode: Light gray (#cccccc) with strong black shadows for optimal contrast
+  - Enhanced readability on both light and dark map backgrounds
+- **Text Shadow Optimization**: Added strong text shadows for all overlay elements
+  - Light backgrounds: `rgba(255, 255, 255, 0.8)` shadows
+  - Dark backgrounds: `rgba(0, 0, 0, 0.9)` shadows for maximum contrast
+
 ### Stability and Reliability Improvements
 - **Systemd Service Optimization**: Both weather station and kiosk services now operate without conflicts
 - **Automatic Recovery**: Services properly handle restarts and dependencies without manual intervention

@@ -27,3 +27,65 @@
   border: none;
 }
 
+/* Clock overlay text styles */
+.dateText {
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3px;
+}
+
+.timeText {
+  font-size: 42px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+}
+
+.sunTimesContainer {
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+  gap: 12px;
+}
+
+.sunTime {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Light mode colors */
+.clockOverlayLight .dateText {
+  color: #666;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.clockOverlayLight .timeText {
+  color: #333;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+.clockOverlayLight .sunTime {
+  color: #777;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+/* Dark mode colors - light gray instead of white */
+.clockOverlayDark .dateText {
+  color: #cccccc;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
+}
+
+.clockOverlayDark .timeText {
+  color: #cccccc;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
+}
+
+.clockOverlayDark .sunTime {
+  color: #cccccc;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
+}
+

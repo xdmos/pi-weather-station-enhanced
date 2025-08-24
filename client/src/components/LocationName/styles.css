@@ -7,6 +7,13 @@
   font-weight: 500;
   color: #333;
   padding: 10px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Dark mode location text - using CSS modules hierarchy */
+:global(.dark) .container {
+  color: #ffffff !important;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8) !important;
 }
 
 /* Optimizations for small displays (800x600) */

@@ -145,19 +145,19 @@ const WeatherMap = ({ zoom, dark }) => {
       </Map>
       
       {/* Date, time, sunrise/sunset overlay in bottom left */}
-      <div className={styles.clockOverlay}>
-        <div style={{fontSize: '24px', fontWeight: 'bold', display: 'flex', justifyContent: 'center', color: '#666', marginBottom: '3px'}}>
+      <div className={`${styles.clockOverlay} ${dark ? styles.clockOverlayDark : styles.clockOverlayLight}`}>
+        <div className={styles.dateText}>
           {format(new Date(), "cccc").toUpperCase()}{" "}
           {format(new Date(), "LLLL").toUpperCase()} {format(new Date(), "d")}
         </div>
-        <div style={{fontSize: '42px', fontWeight: 'bold', display: 'flex', justifyContent: 'center', color: '#333'}}>
+        <div className={styles.timeText}>
           {format(new Date(), "HH:mm")}
         </div>
-        <div style={{fontSize: '20px', fontWeight: 'bold', display: 'flex', justifyContent: 'center', marginTop: '4px', color: '#777', gap: '12px'}}>
-          <div style={{fontSize: '20px', fontWeight: 'bold'}}>
+        <div className={styles.sunTimesContainer}>
+          <div className={styles.sunTime}>
             ☀ {sunriseTime ? format(new Date(sunriseTime), "HH:mm") : ""}
           </div>
-          <div style={{fontSize: '20px', fontWeight: 'bold'}}>
+          <div className={styles.sunTime}>
             ● {sunsetTime ? format(new Date(sunsetTime), "HH:mm") : ""}
           </div>
         </div>
