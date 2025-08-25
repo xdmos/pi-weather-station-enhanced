@@ -157,16 +157,24 @@ const WeatherInfo = () => {
     );
   } else if (currentWeatherDataErr || err) {
     return (
-      <div
-        className={`${styles.errContainer} ${
-          darkMode ? styles.dark : styles.light
-        }`}
-      >
-        <div>Could not retrieve weather data.</div>
-        <div>Is your weather API key valid?</div>
-        {currentWeatherDataErr ? (
-          <div className={styles.message}>{currentWeatherDataErrMsg}</div>
-        ) : null}
+      <div className={styles.container}>
+        {/* Container 1: Location - show even when weather data fails */}
+        <div className={styles.locationContainer}>
+          <LocationName />
+        </div>
+        
+        {/* Weather error message */}
+        <div
+          className={`${styles.errContainer} ${
+            darkMode ? styles.dark : styles.light
+          }`}
+        >
+          <div>Could not retrieve weather data.</div>
+          <div>Is your weather API key valid?</div>
+          {currentWeatherDataErr ? (
+            <div className={styles.message}>{currentWeatherDataErrMsg}</div>
+          ) : null}
+        </div>
       </div>
     );
   } else {

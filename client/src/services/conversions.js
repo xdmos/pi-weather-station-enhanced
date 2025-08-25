@@ -23,9 +23,9 @@ export const convertTemp = (c, units) => {
   }
 
   if (units && units.toLowerCase() === "c") {
-    return parseInt(c);
+    return Math.round(c);
   } else if (units && units.toLowerCase() === "f") {
-    return parseInt(cToF(c));
+    return Math.round(cToF(c));
   } else {
     console.log("Missing / invalid target unit!", units);
     return null;

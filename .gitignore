@@ -9,3 +9,7 @@ settings.json
 .env.local
 dist/
 client/dist/
+CLAUDE.md
+.claude/
+weather-station.log
+settings.json.backup
