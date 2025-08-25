@@ -11,33 +11,6 @@ const CURRENT_WEATHER_DATA_UPDATE_INTERVAL = 3 * 60 * 1000; //every 3 minutes
 const HOURLY_WEATHER_DATA_UPDATE_INTERVAL = 60 * 60 * 1000; //every hour
 const DAILY_WEATHER_DATA_UPDATE_INTERVAL = 24 * 60 * 60 * 1000; //every day
 
-/**
- * Creates an interval to call a weather update callback
- *
- * @param {Object} params
- * @param {Object} params.stateInterval Interval in state
- * @param {Function} params.stateIntervalSetter state interval setter
- * @param {Function} params.cb callback to invoke on each interval
- * @param {Number} params.intervalTime interval frequency, ms
- * @param {Object} params.mapGeo coordinates to get weather for
- */
-function createWeatherUpdateInterval({
-  stateInterval,
-  stateIntervalSetter,
-  cb,
-  intervalTime,
-  mapGeo,
-}) {
-  if (stateInterval) {
-    clearInterval(stateInterval);
-    stateIntervalSetter(null);
-  }
-  if (mapGeo) {
-    const interval = setInterval(cb, intervalTime);
-    cb();
-    stateIntervalSetter(interval);
-  }
-}
 
 /**
  * Displays weather info
@@ -101,31 +74,41 @@ const WeatherInfo = () => {
   }, [reverseGeoApiKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    createWeatherUpdateInterval({
-      stateInterval: currentWeatherUpdateInterval,
-      stateIntervalSetter: setCurrentWeatherUpdateInterval,
-      cb: currentWeatherUpdateCb,
-      intervalTime: CURRENT_WEATHER_DATA_UPDATE_INTERVAL,
-      mapGeo,
-    });
-    createWeatherUpdateInterval({
-      stateInterval: hourlyWeatherUpdateInterval,
-      stateIntervalSetter: setHourlyWeatherUpdateInterval,
-      cb: hourlyWeatherUpdateCb,
-      intervalTime: HOURLY_WEATHER_DATA_UPDATE_INTERVAL,
-      mapGeo,
-    });
-    createWeatherUpdateInterval({
-      stateInterval: dailyWeatherUpdateInterval,
-      stateIntervalSetter: setDailyWeatherUpdateInterval,
-      cb: dailyWeatherUpdateCb,
-      intervalTime: DAILY_WEATHER_DATA_UPDATE_INTERVAL,
-      mapGeo,
-    });
-    return () => {
+    if (!mapGeo) return;
+
+    // Clear any existing intervals first
+    if (currentWeatherUpdateInterval) {
       clearInterval(currentWeatherUpdateInterval);
+      setCurrentWeatherUpdateInterval(null);
+    }
+    if (hourlyWeatherUpdateInterval) {
       clearInterval(hourlyWeatherUpdateInterval);
+      setHourlyWeatherUpdateInterval(null);
+    }
+    if (dailyWeatherUpdateInterval) {
       clearInterval(dailyWeatherUpdateInterval);
+      setDailyWeatherUpdateInterval(null);
+    }
+
+    // Create new intervals
+    const currentInterval = setInterval(currentWeatherUpdateCb, CURRENT_WEATHER_DATA_UPDATE_INTERVAL);
+    const hourlyInterval = setInterval(hourlyWeatherUpdateCb, HOURLY_WEATHER_DATA_UPDATE_INTERVAL);
+    const dailyInterval = setInterval(dailyWeatherUpdateCb, DAILY_WEATHER_DATA_UPDATE_INTERVAL);
+
+    // Set state
+    setCurrentWeatherUpdateInterval(currentInterval);
+    setHourlyWeatherUpdateInterval(hourlyInterval);
+    setDailyWeatherUpdateInterval(dailyInterval);
+
+    // Initial calls
+    currentWeatherUpdateCb();
+    hourlyWeatherUpdateCb();
+    dailyWeatherUpdateCb();
+
+    return () => {
+      clearInterval(currentInterval);
+      clearInterval(hourlyInterval);
+      clearInterval(dailyInterval);
     };
   }, [mapGeo]); // eslint-disable-line react-hooks/exhaustive-deps
 
