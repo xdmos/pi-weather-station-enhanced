@@ -2,6 +2,7 @@ node_modules/
 settings.json
 *.png
 !pi-weather-station.png
+!weather-station-new-20250827.png
 *.jpg
 *.jpeg
 .DS_Store
