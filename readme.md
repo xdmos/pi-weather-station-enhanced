@@ -5,6 +5,9 @@ This is an enhanced weather station designed to be used with a Raspberry Pi on 5
 
 ![pi-weather-station](pi-weather-station.png)
 
+## Latest Version (August 2025)
+![weather-station-latest](weather-station-fixed-gb.png)
+
 The weather station uses the free [Open-Meteo](https://open-meteo.com/) API for weather data (no API key required) and optionally requires API keys from [Mapbox](https://www.mapbox.com/) for map tiles. You can also use an API key from [LocationIQ](https://locationiq.com/) to perform reverse geocoding.
 
 Weather maps are provided by the [RainViewer](https://www.rainviewer.com/) API, which generously does not require an [API key](https://www.rainviewer.com/api.html). The map displays current precipitation radar data only (animation functionality removed for simplicity).
