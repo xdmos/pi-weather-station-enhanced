@@ -3,9 +3,6 @@
 
 This is an enhanced weather station designed to be used with a Raspberry Pi on 5" 800x600 touchscreens.
 
-![pi-weather-station](pi-weather-station.png)
-
-## Latest Version (August 2025)
 ![weather-station-latest](weather-station-scrot-20250827.png)
 
 The weather station uses the free [Open-Meteo](https://open-meteo.com/) API for weather data (no API key required) and optionally requires API keys from [Mapbox](https://www.mapbox.com/) for map tiles. You can also use an API key from [LocationIQ](https://locationiq.com/) to perform reverse geocoding.
