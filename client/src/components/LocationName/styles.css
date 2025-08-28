@@ -5,15 +5,18 @@
   text-align: center;
   font-size: 18px;
   font-weight: 500;
-  color: #333;
   padding: 10px 0;
-  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+  text-shadow: none;
 }
 
-/* Dark mode location text */
-:global(.dark) .container {
-  color: #ffffff !important;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9) !important;
+/* Light mode - black text */
+.light {
+  color: #000000;
+}
+
+/* Dark mode - white text */
+.dark {
+  color: #ffffff;
 }
 
 /* Optimizations for small displays (800x600) */

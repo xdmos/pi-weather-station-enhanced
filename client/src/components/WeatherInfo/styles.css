@@ -17,8 +17,8 @@
   margin: 0;
   border-radius: 4px;
   text-align: center;
-  background: transparent !important;
-  border: none !important;
+  background: transparent;
+  border: none;
 }
 
 .dark .locationContainer {

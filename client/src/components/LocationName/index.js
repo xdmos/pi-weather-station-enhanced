@@ -11,7 +11,7 @@ import styles from "./styles.css";
  * @returns {JSX.Element} Location name
  */
 const LocationName = () => {
-  const { mapGeo, reverseGeoApiKey } = useContext(AppContext);
+  const { mapGeo, reverseGeoApiKey, darkMode } = useContext(AppContext);
   const [name, setName] = useState(null);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const LocationName = () => {
   }, [mapGeo, reverseGeoApiKey]);
 
   return (
-    <div className={`${styles.container}`}>
+    <div className={`${styles.container} ${darkMode ? styles.dark : styles.light}`}>
       {name ? (
         <div>
           <InlineIcon icon={locationIcon} /> {name}
