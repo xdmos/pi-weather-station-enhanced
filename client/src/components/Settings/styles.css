@@ -141,6 +141,53 @@
   border-bottom: 1px solid #2968a3;
 }
 
+.bottomButtonContainer {
+  width: 100%;
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.saveButtonContainer {
+  /* SAVE button container */
+}
+
+.radarLegendContainer {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.legendTitle {
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.legendItems {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.legendItem .colorBox {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
 /* Active button styles */
 .darkMode .button:active {
   background: linear-gradient(#4e4e4e, #5d5c5c);
@@ -184,7 +231,7 @@
   width: 100%;
   margin-top: 8px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding-bottom: 10px;
 }

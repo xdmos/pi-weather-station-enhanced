@@ -119,6 +119,31 @@ const Settings = () => {
               />
             </div>
           </div>
+          <div className={styles.radarLegendContainer}>
+            <div className={styles.legendTitle}>RADAR LEGEND</div>
+            <div className={styles.legendItems}>
+              <div className={styles.legendItem}>
+                <div className={styles.colorBox} style={{backgroundColor: '#0099FF'}}></div>
+                <span>Light (0.1-2.5 mm/h)</span>
+              </div>
+              <div className={styles.legendItem}>
+                <div className={styles.colorBox} style={{backgroundColor: '#00FF00'}}></div>
+                <span>Moderate (2.5-10 mm/h)</span>
+              </div>
+              <div className={styles.legendItem}>
+                <div className={styles.colorBox} style={{backgroundColor: '#FFFF00'}}></div>
+                <span>Heavy (10-50 mm/h)</span>
+              </div>
+              <div className={styles.legendItem}>
+                <div className={styles.colorBox} style={{backgroundColor: '#FF9900'}}></div>
+                <span>Very Heavy (50-100 mm/h)</span>
+              </div>
+              <div className={styles.legendItem}>
+                <div className={styles.colorBox} style={{backgroundColor: '#FF0000'}}></div>
+                <span>Extreme (&gt;100 mm/h)</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </CSSTransition>
