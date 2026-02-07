@@ -10,7 +10,7 @@ User=pi5
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/pi5/.Xauthority
 ExecStartPre=/bin/sleep 15
-ExecStart=/usr/bin/chromium-browser --start-fullscreen --kiosk --no-sandbox --disable-infobars --disable-restore-session-state --disable-session-crashed-bubble --disable-features=TranslateUI --disable-ipc-flooding-protection http://localhost:8080/
+ExecStart=/usr/bin/chromium-browser --start-fullscreen --kiosk --no-sandbox --disable-infobars --disable-restore-session-state --disable-session-crashed-bubble --disable-features=TranslateUI --disable-ipc-flooding-protection --password-store=basic --no-first-run http://localhost:8080/
 Restart=always
 RestartSec=5
 

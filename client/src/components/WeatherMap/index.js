@@ -46,7 +46,8 @@ const WeatherMap = ({ zoom, dark }) => {
     [setMapPosition]
   );
 
-  const [mapTimestamps, setMapTimestamps] = useState(null);
+  const [radarFrames, setRadarFrames] = useState([]);
+  const [radarHost, setRadarHost] = useState("https://tilecache.rainviewer.com");
 
   const MAP_TIMESTAMP_REFRESH_FREQUENCY = 1000 * 60 * 3; //update every 3 minutes
 
@@ -60,11 +61,12 @@ const WeatherMap = ({ zoom, dark }) => {
     });
 
     const updateTimeStamps = () => {
-      console.log('Fetching map timestamps...');
-      getMapTimestamps()
+      console.log("Fetching map timestamps...");
+      getMapRadarData()
         .then((res) => {
-          console.log('Got timestamps:', res);
-          setMapTimestamps(res);
+          console.log("Got radar frames:", res.frames?.length || 0);
+          setRadarHost(res.host);
+          setRadarFrames(res.frames);
         })
         .catch((err) => {
           console.log("timestamp fetch error", err);
@@ -92,12 +94,12 @@ const WeatherMap = ({ zoom, dark }) => {
 
   const { latitude, longitude } = browserGeo || {};
 
-  // For debugging - log when timestamps are loaded
+  // For debugging - log when radar frames are loaded
   useEffect(() => {
-    if (mapTimestamps && mapTimestamps.length > 0) {
-      console.log('Timestamps loaded:', mapTimestamps.length, 'items');
+    if (radarFrames && radarFrames.length > 0) {
+      console.log("Timestamps loaded:", radarFrames.length, "items");
     }
-  }, [mapTimestamps]);
+  }, [radarFrames]);
 
 
   if (!hasVal(latitude) || !hasVal(longitude) || !zoom || !mapApiKey) {
@@ -109,6 +111,10 @@ const WeatherMap = ({ zoom, dark }) => {
     );
   }
   const markerPosition = mapGeo ? [mapGeo.latitude, mapGeo.longitude] : null;
+  const latestRadarFrame =
+    radarFrames && radarFrames.length > 0
+      ? radarFrames[radarFrames.length - 1]
+      : null;
 
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
@@ -131,12 +137,13 @@ const WeatherMap = ({ zoom, dark }) => {
           }/tiles/{z}/{x}/{y}?access_token={apiKey}`}
           apiKey={mapApiKey}
         />
-        {mapTimestamps && mapTimestamps.length > 0 ? (
+        {latestRadarFrame ? (
           <TileLayer
-            key={mapTimestamps.length - 1}
+            key={latestRadarFrame.time || latestRadarFrame.path}
             attribution='<a href="https://www.rainviewer.com/">RainViewer</a>'
-            url={`https://tilecache.rainviewer.com/v2/radar/${mapTimestamps[mapTimestamps.length - 1]}/512/{z}/{x}/{y}/6/1_1.png`}
+            url={`${radarHost}${latestRadarFrame.path}/512/{z}/{x}/{y}/6/1_1.png`}
             opacity={0.7}
+            maxNativeZoom={7}
           />
         ) : null}
         {markerIsVisible && markerPosition ? (
@@ -205,21 +212,52 @@ function hasVal(i) {
 }
 
 /**
- * Get timestamps for weather map
+ * Get current radar frame metadata for weather map
  *
- * @returns {Promise} Promise of timestamps
+ * @returns {Promise<{host: String, frames: Array<{time: Number, path: String}>}>}
  */
-function getMapTimestamps() {
-  return new Promise((resolve, reject) => {
-    axios
-      .get("https://api.rainviewer.com/public/maps.json")
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
+function getMapRadarData() {
+  const defaultHost = "https://tilecache.rainviewer.com";
+
+  function loadLegacyFrames() {
+    return axios.get("https://api.rainviewer.com/public/maps.json").then((legacyRes) => {
+      const legacyFrames = Array.isArray(legacyRes && legacyRes.data)
+        ? legacyRes.data
+            .filter((timestamp) => Number.isFinite(timestamp))
+            .map((timestamp) => ({
+              time: timestamp,
+              path: `/v2/radar/${timestamp}`,
+            }))
+        : [];
+      return { host: defaultHost, frames: legacyFrames };
+    });
+  }
+
+  return axios
+    .get("https://api.rainviewer.com/public/weather-maps.json")
+    .then((res) => {
+      const host = (res && res.data && res.data.host) || defaultHost;
+      const pastFrames = (res && res.data && res.data.radar && res.data.radar.past) || [];
+
+      if (Array.isArray(pastFrames) && pastFrames.length > 0) {
+        const frames = pastFrames
+          .filter((frame) => frame && frame.path)
+          .map((frame) => ({
+            time: frame.time,
+            path: frame.path,
+          }));
+
+        if (frames.length > 0) {
+          return { host, frames };
+        }
+      }
+
+      return loadLegacyFrames();
+    })
+    .catch((err) => {
+      console.log("weather-maps endpoint failed, falling back to maps.json", err);
+      return loadLegacyFrames();
+    });
 }
 
 export default WeatherMap;
