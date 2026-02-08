@@ -1,0 +1,41 @@
+.nightRoot {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.hideMouse {
+  cursor: none;
+}
+
+.clock {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  font-family: "Rubik", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+
+  /* Big, but responsive for different screens. */
+  font-size: clamp(192px, 28vw, 480px);
+  line-height: 1;
+
+  /* Dim so it doesn't blast at night. */
+  color: rgba(235, 235, 235, 0.22);
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.06);
+
+  transition: transform 25s linear;
+  will-change: transform;
+
+  user-select: none;
+  pointer-events: none;
+}
+
+@media (max-width: 800px) and (max-height: 600px) {
+  .clock {
+    font-size: clamp(144px, 32vw, 360px);
+  }
+}

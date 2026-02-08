@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import styles from "./styles.css";
 import { AppContext } from "~/AppContext";
 
@@ -9,6 +9,7 @@ import Screensaver from "~/components/Screensaver";
 import ScreensaverCountdown from "~/components/ScreensaverCountdown";
 import SystemInfo from "~/components/SystemInfo";
 import TopControlButtons from "~/components/TopControlButtons";
+import NightClock from "~/components/NightClock";
 
 import "!style-loader!css-loader!./overrides.css";
 
@@ -27,11 +28,33 @@ const App = () => {
     screensaverActive,
   } = useContext(AppContext);
 
+  // Night clock schedule (local browser/device time): 22:00 -> 06:00
+  const isNightClockTime = (d) => {
+    const mins = d.getHours() * 60 + d.getMinutes();
+    return mins >= 22 * 60 || mins < 6 * 60;
+  };
+
+  const [nightClockActive, setNightClockActive] = useState(() =>
+    isNightClockTime(new Date())
+  );
+
   useEffect(() => {
+    const tick = () => setNightClockActive(isNightClockTime(new Date()));
+    tick();
+    const id = setInterval(tick, 30 * 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+
     getCustomLatLon();
     getBrowserGeo();
     loadStoredData();
   }, []);
+
+  if (nightClockActive) {
+    return <NightClock />;
+  }
 
   // If screensaver is active, show it instead of the main UI
   if (screensaverActive) {

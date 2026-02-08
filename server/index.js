@@ -1,11 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
+const os = require("os");
 const cors = require("cors");
 const open = require("open");
 const ver = require("../package.json").version;
 const appName = require("../package.json").name;
-const { exec } = require("child_process");
+const { exec, execFile } = require("child_process");
 
 const settingsCtrl = require("./settingsCtrl");
 const geolocationCtrl = require("./geolocationCtrl");
@@ -52,6 +53,41 @@ app.delete("/setting", deleteSetting);
 app.get("/geolocation", getCoords);
 
 // System info endpoint
+
+
+const buildXEnv = () => ({
+  ...process.env,
+  DISPLAY: process.env.DISPLAY || ":0",
+  XAUTHORITY: process.env.XAUTHORITY || path.join(os.homedir(), ".Xauthority"),
+});
+
+const runXdotool = (args, cb) => {
+  execFile("xdotool", args, { env: buildXEnv() }, cb);
+};
+
+app.post("/window/minimize", (req, res) => {
+  // In kiosk mode this is Chromium; xdotool needs DISPLAY/XAUTHORITY.
+  runXdotool(["getactivewindow", "windowminimize"], (err) => {
+    if (!err) {
+      return res.json({ ok: true }).end();
+    }
+
+    // Fallback: minimize any visible Chromium windows.
+    runXdotool(
+      ["search", "--onlyvisible", "--class", "chromium", "windowminimize", "%@"],
+      (err2) => {
+        if (!err2) {
+          return res.json({ ok: true }).end();
+        }
+        return res
+          .status(500)
+          .json({ ok: false, error: "Failed to minimize window" })
+          .end();
+      }
+    );
+  });
+});
+
 app.get("/system-info", (req, res) => {
   const getCpuTemp = () => {
     return new Promise((resolve) => {

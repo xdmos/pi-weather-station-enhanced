@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
+import axios from "axios";
 import { AppContext } from "~/AppContext";
 import styles from "./styles.css";
 import { InlineIcon } from "@iconify/react";
 import locationArrow from "@iconify/icons-map/location-arrow";
 import contrastIcon from "@iconify/icons-carbon/contrast";
+import minimizeIcon from "@iconify/icons-carbon/minimize";
 import sharpSettings from "@iconify/icons-ic/sharp-settings";
 import roundLocationOn from "@iconify/icons-ic/round-location-on";
 import cursorIcon from "@iconify/icons-carbon/cursor-1";
@@ -29,6 +31,12 @@ const TopControlButtons = () => {
 
   const toggleMouseVisibility = () => {
     saveMouseHide(!mouseHide);
+  };
+
+  const minimizeWindow = () => {
+    axios.post("/window/minimize").catch((err) => {
+      console.error("Error minimizing window:", err);
+    });
   };
 
   return (
@@ -73,6 +81,13 @@ const TopControlButtons = () => {
         title="Settings"
       >
         <InlineIcon icon={sharpSettings} />
+      </div>
+      <div
+        className={`${styles.controlButton} ${darkMode ? styles.dark : styles.light}`}
+        onClick={minimizeWindow}
+        title="Minimize window"
+      >
+        <InlineIcon icon={minimizeIcon} />
       </div>
     </div>
   );
